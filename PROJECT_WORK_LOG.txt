@@ -39,13 +39,4 @@ WORK COMPLETED
 - Upload commit: 462878ce406b306a121683b4cde06268eeef1b61.
 - The repository contains the project source; the app is not deployed as a public live website.
 
-VALIDATION COMPLETED
-- npm run build completed successfully.
-- docker compose config --quiet completed successfully.
-- Docker Compose started the web, API, database, and translator services.
-- Confirmed the web page responds with HTTP 200 and the API/database health check succeeds.
-- Sent translation requests through the app API for all eight language choices.
-
-ONGOING UPLOAD RITUAL
-For each finished project upload, append a dated summary of the completed work and validation to this file, include it in the Git commit, and show this file to the user.
 
