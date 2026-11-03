@@ -1,0 +1,51 @@
+LIFE OS — PROJECT WORK LOG
+Last updated: 2026-11-03
+
+PROJECT
+A responsive Life Operating System dashboard built with React, Vite, Express, PostgreSQL, and Docker.
+Public repository: https://github.com/ak-9405/LifeOperatingSystem
+Local app: http://localhost:5173
+
+WORK COMPLETED
+
+1. Product interface
+- Built the Life OS dashboard around a daily brief and the life areas: Money, Health, Learning, Goals, Reading, Habits, Career, Business, and Relationships.
+- Added the How It Works, AI companion, and contact sections.
+- Designed responsive layouts and interactive controls for desktop, tablet, and phone screens.
+- Added interactive life-area cards, check-ins, intentions, contact form, navigation, menus, and dialogs.
+- Added sign-up, sign-in, sign-out, and account views.
+- Changed the daily task list to start with every task unchecked. A task is checked only after the user clicks it.
+- The welcome message includes the user's first name only while signed in.
+- Today's task text is editable in src/App.jsx in the tasks array near line 54. The web container mounts src from the project folder for live edits.
+
+2. Accounts and data
+- Added Express API routes backed by PostgreSQL for authentication, life-area intentions, check-ins, and contact submissions.
+- Passwords use scrypt hashes. Authentication sessions use HTTP-only cookies.
+- Added database schema initialization and a health endpoint.
+
+3. Translation
+- Replaced the paid Google Cloud Translation dependency with a local LibreTranslate service powered by Argos Translate models.
+- Added Spanish, French, German, Italian, Portuguese, Japanese, Korean, and Simplified Chinese to the language menu.
+- The page translator covers text, select options, placeholders, accessibility labels, titles, alt text, and components added after the page loads.
+- Personal account names, saved intentions, and typed input values are excluded from translation requests.
+- Docker stores downloaded models in a named volume. The initial image and model download requires an internet connection; subsequent translation runs locally.
+
+4. Local development and repository
+- Configured Docker Compose services for PostgreSQL, the app API, the Vite web app, and LibreTranslate.
+- Mapped the web app to port 5173. The current local site responds at http://localhost:5173.
+- Added .gitignore and .dockerignore rules for local environment files, dependencies, and generated build output.
+- Kept .env out of Git; only .env.example is included.
+- Uploaded the project source and configuration files to the public GitHub repository on the main branch.
+- Upload commit: 462878ce406b306a121683b4cde06268eeef1b61.
+- The repository contains the project source; the app is not deployed as a public live website.
+
+VALIDATION COMPLETED
+- npm run build completed successfully.
+- docker compose config --quiet completed successfully.
+- Docker Compose started the web, API, database, and translator services.
+- Confirmed the web page responds with HTTP 200 and the API/database health check succeeds.
+- Sent translation requests through the app API for all eight language choices.
+
+ONGOING UPLOAD RITUAL
+For each finished project upload, append a dated summary of the completed work and validation to this file, include it in the Git commit, and show this file to the user.
+
