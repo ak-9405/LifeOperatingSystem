@@ -31,6 +31,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import AreaDetailModal from './components/AreaDetailModal.jsx';
 import AuthModal from './components/AuthModal.jsx';
+import LifeBalancePanel from './components/LifeBalancePanel.jsx';
 
 const languageOptions = [
   { code: 'en', label: 'English' },
@@ -68,12 +69,6 @@ const areas = [
   { slug: 'career', title: 'Career', value: '2 priorities', detail: 'A thoughtful next move', change: 'In focus', icon: BriefcaseBusiness, tone: 'blue', progress: 58 },
   { slug: 'business', title: 'Business', value: 'Growing well', detail: 'The important work', change: '+12%', icon: BarChart3, tone: 'mint', progress: 76 },
   { slug: 'relationships', title: 'Relationships', value: '4 check-ins', detail: 'Meaningful time together', change: 'This week', icon: HeartHandshake, tone: 'rose', progress: 70 },
-];
-
-const balance = [
-  { label: 'Health', value: 82, color: 'green' },
-  { label: 'Money', value: 68, color: 'sand' },
-  { label: 'People', value: 76, color: 'lavender' },
 ];
 
 const steps = [
@@ -542,30 +537,7 @@ function App() {
               </div>
             </article>
 
-            <aside className="pulse-card">
-              <div className="pulse-topline"><span className="eyebrow">A MOMENT TO ZOOM OUT</span><span className="pulse-dot" /></div>
-              <div className="pulse-title-row"><h3>Your life,<br />in balance.</h3><div className="pulse-score"><span>82</span><small>your week</small></div></div>
-              <p className="pulse-description">You’re doing more than you think. Here’s the shape of your week.</p>
-              <div className="pulse-chart" aria-label="Life balance chart">
-                <div className="pulse-chart-grid"><span /><span /><span /><span /></div>
-                <svg viewBox="0 0 320 112" role="img" aria-label="Your balance is trending up">
-                  <defs><linearGradient id="pulseFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#a6d9bf" stopOpacity=".46" /><stop offset="100%" stopColor="#a6d9bf" stopOpacity=".01" /></linearGradient></defs>
-                  <path d="M0,84 C24,78 28,49 54,59 S91,79 110,59 S137,48 156,61 S192,80 209,47 S239,30 254,43 S283,59 300,32 S313,18 320,24 L320,112 L0,112 Z" fill="url(#pulseFill)" />
-                  <path d="M0,84 C24,78 28,49 54,59 S91,79 110,59 S137,48 156,61 S192,80 209,47 S239,30 254,43 S283,59 300,32 S313,18 320,24" fill="none" stroke="#6ab48d" strokeWidth="2.4" strokeLinecap="round" />
-                  <circle cx="300" cy="32" r="4.4" fill="#f7f8f3" stroke="#4e986d" strokeWidth="2.5" />
-                </svg>
-                <div className="chart-labels"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>TODAY</span></div>
-              </div>
-              <div className="balance-list">
-                {balance.map((item) => (
-                  <div className="balance-item" key={item.label}>
-                    <span className={'balance-dot ' + item.color} /><span className="balance-label">{item.label}</span>
-                    <div className="balance-track"><span style={{ width: item.value + '%' }} /></div><span className="balance-value">{item.value}%</span>
-                  </div>
-                ))}
-              </div>
-              <a className="pulse-note" href="#life-areas"><span className="pulse-note-icon"><Flower2 size={15} /></span><span>Progress is allowed to look like you.</span><ArrowRight size={13} /></a>
-            </aside>
+            <LifeBalancePanel language={language} />
           </section>
 
           <section className="area-section" id="life-areas">

@@ -114,29 +114,9 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .pulse-card { display: flex; flex-direction: column; min-width: 0; padding: 23px 22px 15px; border: 1px solid #eaede6; border-radius: 15px; background: #fff; }
 .pulse-topline { display: flex; align-items: center; justify-content: space-between; }
 .pulse-topline .eyebrow { font-size: 8px; letter-spacing: 1.16px; }
-.pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: #83b08b; box-shadow: 0 0 0 4px #edf4ea; }
 .pulse-title-row { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
 .pulse-title-row h3 { margin: 0; color: #35483e; font-family: var(--serif); font-size: 24px; font-weight: 400; letter-spacing: -.35px; line-height: 1.12; }
-.pulse-score { display: grid; justify-items: end; gap: 1px; padding-right: 4px; }
-.pulse-score span { color: #597b5f; font-family: var(--serif); font-size: 34px; line-height: 1; }
-.pulse-score small { color: #a5afa5; font-size: 8px; }
 .pulse-description { max-width: 235px; margin: 8px 0 0; color: #9aa29b; font-size: 9px; line-height: 1.55; }
-.pulse-chart { position: relative; margin-top: 16px; padding-bottom: 16px; }
-.pulse-chart-grid { position: absolute; inset: 0 0 17px; display: flex; flex-direction: column; justify-content: space-between; }
-.pulse-chart-grid span { width: 100%; height: 1px; background: #eef1eb; }
-.pulse-chart > svg { position: relative; z-index: 1; display: block; width: 100%; height: 88px; overflow: visible; }
-.chart-labels { display: flex; justify-content: space-between; padding: 4px 1px 0; color: #a9b1a9; font-size: 6px; font-weight: 600; letter-spacing: .4px; }
-.balance-list { display: grid; gap: 9px; margin-top: 4px; }
-.balance-item { display: grid; grid-template-columns: 6px 43px minmax(25px,1fr) 26px; align-items: center; gap: 7px; }
-.balance-dot { width: 6px; height: 6px; border-radius: 50%; background: #7aad81; }
-.balance-dot.sand { background: #c9b486; }
-.balance-dot.lavender { background: #a49bc2; }
-.balance-label { color: #849087; font-size: 8px; }
-.balance-track { overflow: hidden; height: 3px; border-radius: 10px; background: #eff1ed; }
-.balance-track > span { display: block; height: 100%; border-radius: inherit; background: #91b698; }
-.balance-item:nth-child(2) .balance-track > span { background: #d0bf98; }
-.balance-item:nth-child(3) .balance-track > span { background: #b4acd0; }
-.balance-value { color: #768279; font-size: 8px; text-align: right; }
 .pulse-note { display: flex; align-items: center; gap: 8px; margin-top: auto; padding: 11px 0 0; color: #89988a; font-family: var(--serif); font-size: 12px; }
 .pulse-note-icon { display: grid; place-items: center; width: 23px; height: 23px; color: #718c72; border-radius: 50%; background: #edf3e9; }
 .area-section { padding: 66px 0 73px; }
@@ -372,7 +352,6 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
   .task-copy > span { font-size: 10px; }
   .brief-bottom { font-size: 9px; }
   .pulse-card { min-height: 0; padding: 19px 18px 15px; }
-  .pulse-chart > svg { height: 99px; }
   .area-section { padding: 53px 0; }
   .section-heading { align-items: flex-start; }
   .section-heading h2 { max-width: 360px; font-size: 27px; }
