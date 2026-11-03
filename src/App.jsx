@@ -52,10 +52,10 @@ const navigation = [
 ];
 
 const tasks = [
-  { id: 'money', title: 'Brush your teeth!', detail: 'Hygiene' · 10 MIN' },
-  { id: 'health', title: 'Make the bed nice and tidy!', detail: 'Mental Health' · 25 MIN' },
-  { id: 'learning', title: 'Tell yourself you rock!', detail: 'Motivation' · 30 MIN' },
-  { id: 'people', title: 'Time to HUSTLE!', detail: 'Discipline' · 5 MIN' },
+  { id: 'money', title: 'Brush your teeth!', detail: 'Hygiene · 10 MIN' },
+  { id: 'health', title: 'Make the bed nice and tidy!', detail: 'Mental Health · 25 MIN' },
+  { id: 'learning', title: 'Tell yourself you rock!', detail: 'Motivation · 30 MIN' },
+  { id: 'people', title: 'Time to HUSTLE!', detail: 'Discipline · 5 MIN' },
 ];
 
 const areas = [

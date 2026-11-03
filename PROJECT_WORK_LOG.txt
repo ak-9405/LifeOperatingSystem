@@ -40,3 +40,11 @@ WORK COMPLETED
 - The repository contains the project source; the app is not deployed as a public live website.
 
 
+
+ONGOING UPLOAD RITUAL
+For each finished project upload, append a dated summary of the completed work and validation to this file, include it in the Git commit, and show this file to the user.
+
+UPLOAD ENTRY — 2026-11-03
+- Updated the four “The things that matter today” detail labels in src/App.jsx to use Hygiene, Mental Health, Motivation, and Discipline categories with their existing durations.
+- Corrected the detail values as valid text strings.
+- Validation: npm run build passed.
