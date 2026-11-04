@@ -2,7 +2,7 @@
 
 A responsive personal life dashboard built with React, Vite, Express, PostgreSQL, and Docker.
 
-## Run the full app with Docker
+## Run the full app with Docker ##
 
 1. Copy .env.example to .env if you want to change the default local settings.
 2. Start the app with: docker compose up --build
