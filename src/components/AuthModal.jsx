@@ -12,6 +12,7 @@ function initials(name = '') {
 
 export default function AuthModal({
   mode,
+  presentation = 'modal',
   user,
   error,
   pending,
@@ -19,23 +20,36 @@ export default function AuthModal({
   onModeChange,
   onSubmit,
   onSignOut,
+  onExportData,
+  onDeleteAccount,
 }) {
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [googleStatus, setGoogleStatus] = useState({ googleEnabled: false, greetingEmailsEnabled: false });
   const dialogRef = useRef(null);
 
   useEffect(() => {
+    if (presentation === 'page') return undefined;
     dialogRef.current?.focus();
     const onKeyDown = (event) => {
       if (event.key === 'Escape' && !pending) onClose();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose, pending]);
+  }, [onClose, pending, presentation]);
 
+  useEffect(() => {
+    let active = true;
+    fetch('/api/auth/google/status')
+      .then((response) => response.ok ? response.json() : null)
+      .then((status) => { if (active && status) setGoogleStatus(status); })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
   return (
-    <div className="modal-scrim auth-scrim" onMouseDown={(event) => event.target === event.currentTarget && !pending && onClose()}>
-      <section className={'auth-dialog' + (mode === 'account' ? ' account-dialog' : '')} role="dialog" aria-modal="true" aria-labelledby="auth-dialog-title" ref={dialogRef} tabIndex={-1}>
-        <button type="button" className="icon-button auth-close" onClick={onClose} aria-label="Close account dialog" disabled={pending}><X size={18} /></button>
+    <div className={presentation === 'page' ? 'auth-page-panel' : 'modal-scrim auth-scrim'} onMouseDown={(event) => presentation !== 'page' && event.target === event.currentTarget && !pending && onClose()}>
+      <section className={'auth-dialog' + (mode === 'account' ? ' account-dialog' : '') + (presentation === 'page' ? ' page-panel' : '')} role={presentation === 'page' ? 'region' : 'dialog'} aria-modal={presentation === 'page' ? undefined : true} aria-labelledby="auth-dialog-title" ref={dialogRef} tabIndex={-1}>
+        {presentation !== 'page' && <button type="button" className="icon-button auth-close" onClick={onClose} aria-label="Close account dialog" disabled={pending}><X size={18} /></button>}
 
         {mode === 'account' ? (
           <>
@@ -43,13 +57,25 @@ export default function AuthModal({
             <div className="account-avatar">{initials(user?.name)}</div>
             <span className="eyebrow auth-eyebrow">YOUR PERSONAL SPACE</span>
             <h2 id="auth-dialog-title">You’re right at home.</h2>
-            <p className="auth-intro">Your notes and check-ins are saved to your Life OS account.</p>
+            <p className="auth-intro">{user?.demo ? 'The localhost preview opens as Admin. Sign out to test another account.' : 'Your tasks, intentions and check-ins are saved to your Life OS account.'}</p>
             <div className="account-card">
               <strong data-translate-ignore="true">{user?.name}</strong>
               <span data-translate-ignore="true">{user?.email}</span>
               <span className="account-status"><Check size={12} /> Signed in</span>
             </div>
             {error && <p className="auth-error" role="alert">{error}</p>}
+            <div className="account-data-actions">
+              <button className="account-export" type="button" onClick={onExportData} disabled={pending}>Download my data</button>
+              {!user?.demo && (!confirmDelete ? (
+                <button className="account-delete" type="button" onClick={() => setConfirmDelete(true)} disabled={pending}>Delete my account</button>
+              ) : (
+                <div className="account-delete-confirm" role="alert">
+                  <p>This permanently deletes your account, tasks, intentions, check-ins, health readings, goals and contact notes saved with this email.</p>
+                  <button type="button" onClick={onDeleteAccount} disabled={pending}>{pending ? 'Deleting…' : 'Delete permanently'}</button>
+                  <button type="button" onClick={() => setConfirmDelete(false)} disabled={pending}>Keep account</button>
+                </div>
+              ))}
+            </div>
             <button className="button account-signout" type="button" onClick={onSignOut} disabled={pending}>
               {pending ? 'Signing out…' : 'Sign out'} <ArrowRight size={15} />
             </button>
@@ -61,10 +87,17 @@ export default function AuthModal({
             <h2 id="auth-dialog-title">{mode === 'signup' ? 'Make it yours.' : 'Good to see you.'}</h2>
             <p className="auth-intro">
               {mode === 'signup'
-                ? 'Create your account to keep your intentions and check-ins close.'
+                ? 'Create your account to keep your tasks, intentions and check-ins close.'
                 : 'Sign in to pick up right where you left off.'}
             </p>
 
+            <div className="auth-provider-actions">
+              <button type="button" className="google-signin-button" disabled={!googleStatus.googleEnabled || pending} onClick={() => window.location.assign('/api/auth/google')}>
+                <span className="google-mark" aria-hidden="true">G</span> Continue with Google
+              </button>
+              {!googleStatus.googleEnabled && <small>Google sign-in needs OAuth credentials in the server settings.</small>}
+            </div>
+            <div className="auth-divider"><span>or use email</span></div>
             <form className="auth-form" onSubmit={onSubmit}>
               {mode === 'signup' && (
                 <label className="auth-field">
@@ -115,6 +148,7 @@ export default function AuthModal({
               </button>
             </div>
             <div className="auth-footnote"><LockKeyhole size={12} /> Your password is securely hashed. It is never stored as plain text.</div>
+            {!googleStatus.greetingEmailsEnabled && <div className="auth-email-config-note">Warm greeting emails need mail server settings.</div>}
           </>
         )}
       </section>

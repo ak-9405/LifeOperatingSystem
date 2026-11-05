@@ -11,9 +11,11 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(100) NOT NULL,
   email VARCHAR(254) NOT NULL,
   password_hash TEXT NOT NULL,
+  google_sub VARCHAR(255),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE UNIQUE INDEX IF NOT EXISTS users_email_lower_idx ON users (LOWER(email));
+CREATE UNIQUE INDEX IF NOT EXISTS users_google_sub_idx ON users (google_sub) WHERE google_sub IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS auth_sessions (
   token_hash CHAR(64) PRIMARY KEY,
@@ -30,4 +32,40 @@ CREATE TABLE IF NOT EXISTS life_area_updates (
   check_ins INTEGER NOT NULL DEFAULT 0 CHECK (check_ins >= 0),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   PRIMARY KEY (user_id, area_slug)
+);
+CREATE TABLE IF NOT EXISTS life_area_check_ins (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  area_slug VARCHAR(32) NOT NULL,
+  activity_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS life_area_check_ins_user_date_idx ON life_area_check_ins (user_id, activity_date);
+
+CREATE TABLE IF NOT EXISTS health_daily_metrics (
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  metric_date DATE NOT NULL,
+  steps INTEGER CHECK (steps BETWEEN 0 AND 100000),
+  sleep_minutes SMALLINT CHECK (sleep_minutes BETWEEN 1 AND 1440),
+  resting_pulse SMALLINT CHECK (resting_pulse BETWEEN 25 AND 240),
+  source VARCHAR(24) NOT NULL DEFAULT 'manual',
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, metric_date)
+);
+CREATE INDEX IF NOT EXISTS health_daily_metrics_user_date_idx ON health_daily_metrics (user_id, metric_date DESC);
+CREATE TABLE IF NOT EXISTS health_goals (
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  metric_key VARCHAR(16) NOT NULL CHECK (metric_key IN ('steps', 'sleep')),
+  target_value INTEGER NOT NULL CHECK (target_value > 0),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, metric_key)
+);
+CREATE TABLE IF NOT EXISTS philosophy_quotes (
+  id VARCHAR(32) PRIMARY KEY,
+  quote_text TEXT NOT NULL,
+  author VARCHAR(80) NOT NULL,
+  work VARCHAR(200) NOT NULL,
+  translator VARCHAR(100) NOT NULL,
+  source_url TEXT NOT NULL,
+  display_order INTEGER NOT NULL CHECK (display_order > 0)
 );

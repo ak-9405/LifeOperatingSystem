@@ -20,6 +20,73 @@ export function createLifeAreaRouter(pool, requireAuth) {
   });
   router.use(requireAuth);
 
+  router.post('/import', async (request, response) => {
+    const areas = request.body?.areas;
+    if (!Array.isArray(areas) || areas.length > validAreas.size) {
+      return response.status(400).json({ error: 'The saved life areas could not be imported.' });
+    }
+    for (const area of areas) {
+      if (
+        !area || !validAreas.has(area.slug) ||
+        typeof area.intention !== 'string' || area.intention.length > 240 ||
+        !Number.isInteger(Number(area.checkIns)) || Number(area.checkIns) < 0 || Number(area.checkIns) > 10000
+      ) return response.status(400).json({ error: 'Some saved life area details are invalid.' });
+    }
+
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      for (const area of areas) {
+        if (!area.intention.trim() && Number(area.checkIns) === 0) continue;
+        await client.query(
+          'INSERT INTO life_area_updates (user_id, area_slug, intention, check_ins) VALUES ($1, $2, $3, $4) ' +
+            'ON CONFLICT (user_id, area_slug) DO UPDATE SET ' +
+            "intention = CASE WHEN EXCLUDED.intention = '' THEN life_area_updates.intention ELSE EXCLUDED.intention END, " +
+            'check_ins = GREATEST(life_area_updates.check_ins, EXCLUDED.check_ins), updated_at = NOW()',
+          [request.user.id, area.slug, area.intention.trim(), Number(area.checkIns)],
+        );
+      }
+      await client.query('COMMIT');
+      return response.json({ imported: areas.length });
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      console.error('Could not import guest life areas:', error.message);
+      return response.status(503).json({ error: 'Your guest life areas could not be added to the account.' });
+    } finally {
+      client.release();
+    }
+  });
+
+  router.get('/activity', async (request, response) => {
+    const month = typeof request.query.month === 'string' ? request.query.month : '';
+    if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) {
+      return response.status(400).json({ error: 'Choose a valid calendar month.' });
+    }
+    const [year, monthNumber] = month.split('-').map(Number);
+    const start = month + '-01';
+    const end = new Date(Date.UTC(year, monthNumber, 1)).toISOString().slice(0, 10);
+
+    try {
+      const result = await pool.query(
+        'WITH activity AS (' +
+          "SELECT activity_date AS activity_day, area_slug, 'check-in'::text AS kind " +
+            'FROM life_area_check_ins WHERE user_id = $1 AND activity_date >= $2 AND activity_date < $3 ' +
+          'UNION ALL ' +
+          "SELECT completed_on AS activity_day, area_slug, 'task'::text AS kind " +
+            'FROM life_tasks WHERE user_id = $1 AND completed = TRUE AND completed_on >= $2 AND completed_on < $3' +
+        ') SELECT TO_CHAR(activity_day, \'YYYY-MM-DD\') AS date, kind, area_slug, COUNT(*)::integer AS count ' +
+          'FROM activity GROUP BY activity_day, kind, area_slug ORDER BY activity_day, kind, area_slug',
+        [request.user.id, start, end],
+      );
+      return response.json({ month, activity: result.rows.map((row) => ({
+        date: row.date, kind: row.kind, areaSlug: row.area_slug, count: Number(row.count),
+      })) });
+    } catch (error) {
+      console.error('Could not load dated activity:', error.message);
+      return response.status(503).json({ error: 'Your activity calendar could not be loaded right now.' });
+    }
+  });
+
   router.get('/', async (request, response) => {
     try {
       const result = await pool.query(
@@ -67,22 +134,40 @@ export function createLifeAreaRouter(pool, requireAuth) {
     const { slug } = request.params;
     if (!validAreas.has(slug)) return response.status(404).json({ error: 'That life area was not found.' });
 
+    const requestedDate = request.body?.occurredOn;
+    const activityDate = isDateString(requestedDate) ? requestedDate : new Date().toISOString().slice(0, 10);
+    const client = await pool.connect();
     try {
-      const result = await pool.query(
+      await client.query('BEGIN');
+      const result = await client.query(
         'INSERT INTO life_area_updates (user_id, area_slug, check_ins) VALUES ($1, $2, 1) ' +
           'ON CONFLICT (user_id, area_slug) DO UPDATE ' +
           'SET check_ins = life_area_updates.check_ins + 1, updated_at = NOW() ' +
           'RETURNING area_slug, intention, check_ins, updated_at',
         [request.user.id, slug],
       );
+      await client.query(
+        'INSERT INTO life_area_check_ins (user_id, area_slug, activity_date) VALUES ($1, $2, $3)',
+        [request.user.id, slug, activityDate],
+      );
+      await client.query('COMMIT');
       return response.json({ area: toPublicArea(result.rows[0]) });
     } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
       console.error('Could not save a life area check-in:', error.message);
       return response.status(503).json({ error: 'Your check-in could not be saved right now.' });
+    } finally {
+      client.release();
     }
   });
 
   return router;
+}
+
+function isDateString(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parsed = new Date(value + 'T00:00:00Z');
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
 }
 
 function toPublicArea(row) {

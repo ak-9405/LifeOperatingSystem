@@ -1,223 +1,154 @@
-import { ArrowRight, ArrowUpRight, Flower2, RotateCcw } from 'lucide-react';
-import { useEffect, useId, useRef, useState } from 'react';
+import { ArrowRight, CalendarDays, Check, ChevronLeft, ChevronRight, CircleCheck, Leaf, LockKeyhole, Sparkles } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import './LifeBalancePanel.css';
 
-// Preview series until the app stores dated balance measurements.
-const series = [
-  { id: 'health', label: 'Health', color: '#629a7a', week: [46, 61, 55, 72, 67, 78, 82], month: [46, 62, 72, 82] },
-  { id: 'money', label: 'Money', color: '#b69b67', week: [52, 47, 58, 55, 64, 62, 68], month: [42, 55, 61, 68] },
-  { id: 'people', label: 'People', color: '#9b89b5', week: [40, 57, 52, 65, 60, 71, 76], month: [44, 58, 65, 76] },
-];
-
-const periods = {
-  week: { labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], description: 'Here’s the shape of a week, one small step at a time.' },
-  month: { labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], description: 'Step back a little further. Small things add up over a month.' },
+const areaNames = {
+  money: 'Money', health: 'Health', learning: 'Learning', goals: 'Goals',
+  reading: 'Reading', habits: 'Habits', career: 'Career', business: 'Business', relationships: 'Relationships',
 };
+const pad = (value) => String(value).padStart(2, '0');
+const keyFor = (year, month, day) => year + '-' + pad(month + 1) + '-' + pad(day);
 
-const chart = { width: 360, height: 156, inset: 12, top: 12, bottom: 144 };
-const pointX = (index, count) => chart.inset + index * (chart.width - chart.inset * 2) / (count - 1);
-const pointY = (value) => chart.bottom - value / 100 * (chart.bottom - chart.top);
-const averageAt = (period, index) => Math.round(series.reduce((sum, item) => sum + item[period][index], 0) / series.length);
+export default function LifeBalancePanel({ language = 'en', authenticated = false, today, refreshKey = 0 }) {
+  const [month, setMonth] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  });
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [activity, setActivity] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-// Horizontal control points keep each curve inside its adjacent data values.
-function curvePath(values) {
-  return values.reduce((path, value, index) => {
-    const x = pointX(index, values.length);
-    const y = pointY(value);
-    if (!index) return 'M ' + x + ',' + y;
-    const previousX = pointX(index - 1, values.length);
-    const midpoint = (previousX + x) / 2;
-    return path + ' C ' + midpoint + ',' + pointY(values[index - 1]) + ' ' + midpoint + ',' + y + ' ' + x + ',' + y;
-  }, '');
-}
-
-function AnimatedScore({ value }) {
-  const [displayed, setDisplayed] = useState(0);
-  const previous = useRef(0);
+  const year = month.getFullYear();
+  const monthIndex = month.getMonth();
+  const monthKey = year + '-' + pad(monthIndex + 1);
+  const monthTitle = new Intl.DateTimeFormat(language, { month: 'long', year: 'numeric' }).format(month);
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+  const firstWeekday = (new Date(year, monthIndex, 1).getDay() + 6) % 7;
+  const cellCount = Math.ceil((firstWeekday + daysInMonth) / 7) * 7;
+  const weekdayFormatter = new Intl.DateTimeFormat(language, { weekday: 'short', timeZone: 'UTC' });
+  const dayFormatter = new Intl.DateTimeFormat(language, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+  const weekdays = Array.from({ length: 7 }, (_, index) => weekdayFormatter.format(new Date(Date.UTC(2024, 0, 1 + index))));
 
   useEffect(() => {
-    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const start = previous.current;
-    let frame;
-    let startedAt;
+    if (!authenticated) {
+      setActivity([]);
+      setLoading(false);
+      setError('');
+      return undefined;
+    }
+    const controller = new AbortController();
+    setLoading(true);
+    setActivity([]);
+    setError('');
+    fetch('/api/life-areas/activity?month=' + monthKey, { signal: controller.signal })
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Your activity could not be loaded.');
+        setActivity(result.activity || []);
+      })
+      .catch((reason) => {
+        if (reason.name !== 'AbortError') setError(reason.message || 'Your activity could not be loaded.');
+      })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
+  }, [authenticated, monthKey, refreshKey]);
 
-    const finish = () => {
-      window.cancelAnimationFrame(frame);
-      previous.current = value;
-      setDisplayed(value);
-    };
-    const animate = (time) => {
-      startedAt ??= time;
-      const progress = Math.min((time - startedAt) / 650, 1);
-      const next = Math.round(start + (value - start) * (1 - (1 - progress) ** 3));
-      previous.current = next;
-      setDisplayed(next);
-      if (progress < 1) frame = window.requestAnimationFrame(animate);
-    };
-    const onPreferenceChange = () => { if (preference.matches) finish(); };
+  const activityByDate = useMemo(() => activity.reduce((all, item) => {
+    if (!all[item.date]) all[item.date] = [];
+    all[item.date].push(item);
+    return all;
+  }, {}), [activity]);
+  const monthDays = Object.entries(activityByDate).filter(([, items]) => items.reduce((sum, item) => sum + item.count, 0) > 0).length;
+  const monthEvents = activity.reduce((sum, item) => sum + item.count, 0);
+  const selectedEvents = activityByDate[selectedDate] || [];
+  const selectedTotal = selectedEvents.reduce((sum, item) => sum + item.count, 0);
+  const selectedDateText = dayFormatter.format(new Date(selectedDate + 'T12:00:00Z'));
+  const isCurrentMonth = year === Number(today.slice(0, 4)) && monthIndex === Number(today.slice(5, 7)) - 1;
 
-    if (preference.matches) finish();
-    else frame = window.requestAnimationFrame(animate);
-    preference.addEventListener('change', onPreferenceChange);
-    return () => {
-      window.cancelAnimationFrame(frame);
-      preference.removeEventListener('change', onPreferenceChange);
-    };
-  }, [value]);
-
-  return <span data-translate-ignore="true" aria-hidden="true">{displayed}</span>;
-}
-
-export default function LifeBalancePanel({ language = 'en' }) {
-  const [period, setPeriod] = useState('week');
-  const [selectedSeries, setSelectedSeries] = useState('all');
-  const [selectedIndex, setSelectedIndex] = useState(6);
-  const [replay, setReplay] = useState(0);
-  const pointButtons = useRef([]);
-  const id = useId().replace(/:/g, '');
-  const labels = periods[period].labels;
-  const weekdayFormatter = new Intl.DateTimeFormat(language, { weekday: 'short', timeZone: 'UTC' });
-  const axisLabels = period === 'week'
-    ? labels.map((_, index) => weekdayFormatter.format(new Date(Date.UTC(2024, 0, 1 + index))))
-    : labels;
-  const activeSeries = series.find((item) => item.id === selectedSeries);
-  const values = labels.map((_, index) => activeSeries ? activeSeries[period][index] : averageAt(period, index));
-  const score = values[selectedIndex];
-  const change = values.at(-1) - values[0];
-  const color = activeSeries?.color || '#629a7a';
-  const path = curvePath(values);
-  const x = pointX(selectedIndex, labels.length);
-  const titleId = id + '-title';
-  const helpId = id + '-help';
-  const detailId = id + '-detail';
-
-  function changePeriod(next) {
-    setPeriod(next);
-    setSelectedIndex(periods[next].labels.length - 1);
+  function moveMonth(direction) {
+    const next = new Date(year, monthIndex + direction, 1);
+    if (keyFor(next.getFullYear(), next.getMonth(), 1) > today.slice(0, 7) + '-01') return;
+    setMonth(next);
+    const nextDays = new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate();
+    const day = direction > 0 ? 1 : nextDays;
+    setSelectedDate(keyFor(next.getFullYear(), next.getMonth(), day));
   }
 
-  function navigatePoints(event, index) {
-    const next = {
-      ArrowLeft: Math.max(0, index - 1),
-      ArrowRight: Math.min(labels.length - 1, index + 1),
-      Home: 0,
-      End: labels.length - 1,
-    }[event.key];
-    if (next === undefined) return;
-    event.preventDefault();
-    setSelectedIndex(next);
-    pointButtons.current[next]?.focus();
+  if (!authenticated) {
+    return (
+      <aside className="pulse-card life-balance-panel activity-calendar activity-locked" aria-labelledby="activity-calendar-title">
+        <div className="activity-panel-topline"><span className="eyebrow">YOUR ACTIVITY</span><span className="activity-leaf-mark"><Leaf size={15} /></span></div>
+        <div className="activity-locked-heading"><span className="activity-calendar-mark"><CalendarDays size={20} /></span><span className="eyebrow">A MONTH AT A GLANCE</span></div>
+        <h3 id="activity-calendar-title">Small steps,<br /><em>in full view.</em></h3>
+        <p className="activity-intro">Your calendar fills with the check-ins you log and the tasks you finish. It’s a record of your days, shaped by you.</p>
+        <div className="activity-locked-note"><LockKeyhole size={16} /><span>Your personal activity appears here once you enter your private workspace.</span></div>
+        <span className="activity-locked-foot"><Sparkles size={13} /> Check-ins · finished tasks · your own rhythm</span>
+      </aside>
+    );
   }
 
   return (
-    <aside className="pulse-card life-balance-panel" aria-labelledby={titleId} style={{ '--balance-accent': color }}>
-      <div className="pulse-topline">
-        <span className="eyebrow">A MOMENT TO ZOOM OUT</span>
-        <span className="balance-breath" aria-hidden="true" />
+    <aside className="pulse-card life-balance-panel activity-calendar" aria-labelledby="activity-calendar-title" aria-busy={loading}>
+      <div className="activity-panel-topline"><span className="eyebrow">YOUR ACTIVITY</span><span className="activity-leaf-mark"><Leaf size={15} /></span></div>
+      <div className="activity-heading-row">
+        <div>
+          <span className="eyebrow activity-kicker">A MONTH AT A GLANCE</span>
+          <h3 id="activity-calendar-title">Small steps,<br /><em>in full view.</em></h3>
+        </div>
+        <div className="activity-month-total"><strong>{monthDays}</strong><span>active<br />{monthDays === 1 ? 'day' : 'days'}</span></div>
       </div>
-      <div className="pulse-title-row">
-        <h3 id={titleId}>Your life,<br />in balance.</h3>
-        <div className="balance-score" role="group" aria-label={(activeSeries?.label || 'Life balance') + ' score: ' + score + ' out of 100'}>
-          <div><AnimatedScore key={period + '-' + replay} value={score} /><small>/ 100</small></div>
-          <span>{activeSeries?.label || 'Whole picture'}</span>
+      <div className="activity-intro-row"><p className="activity-intro">Every check-in and finished task adds a little color to your month.</p><span className="activity-leaf-orbit" aria-hidden="true"><Leaf size={18} /></span></div>
+
+      <div className="activity-month-toolbar">
+        <div><span className="activity-month-label">{monthTitle}</span><span className="activity-month-subtitle">{monthEvents} {monthEvents === 1 ? 'small step' : 'small steps'}</span></div>
+        <div className="activity-month-controls" role="group" aria-label="Change calendar month">
+          <button type="button" aria-label="Previous month" onClick={() => moveMonth(-1)}><ChevronLeft size={16} /></button>
+          <button type="button" aria-label="Next month" onClick={() => moveMonth(1)} disabled={isCurrentMonth}><ChevronRight size={16} /></button>
         </div>
       </div>
-      <p className="pulse-description" key={period}>{periods[period].description}</p>
 
-      <div className="balance-toolbar">
-        <div className="balance-periods" role="group" aria-label="Chart time range">
-          {['week', 'month'].map((option) => (
-            <button type="button" key={option} aria-pressed={period === option} onClick={() => changePeriod(option)}>
-              {option === 'week' ? 'Week' : 'Month'}
-            </button>
-          ))}
-        </div>
-        <span className="balance-trend" title="Change from the first to the last point in this sample period"><ArrowUpRight size={12} /><span data-translate-ignore="true">+{change}</span> <span>pts</span></span>
-        <button type="button" className="balance-replay" onClick={() => setReplay((value) => value + 1)} aria-label="Replay chart animation" title="Replay animation">
-          <RotateCcw key={replay} size={13} />
-        </button>
-      </div>
-
-      <div className="balance-chart-heading">
-        <button type="button" className="balance-overview" aria-pressed={selectedSeries === 'all'} onClick={() => setSelectedSeries('all')}>All areas</button>
-        <span id={detailId} className="balance-point-detail" aria-live="polite" aria-atomic="true">
-          <span key={period + '-' + selectedIndex}>{labels[selectedIndex]}</span><span aria-hidden="true">·</span><strong data-translate-ignore="true">{score}<small>/100</small></strong>
-        </span>
-      </div>
-
-      <div className="balance-plot" role="group" aria-label="Sample life balance chart" aria-describedby={helpId}>
-        <svg viewBox={'0 0 ' + chart.width + ' ' + chart.height} preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id={id + '-fill'} x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity=".22" />
-              <stop offset="100%" stopColor={color} stopOpacity=".015" />
-            </linearGradient>
-          </defs>
-          {[0, 50, 100].map((value) => <line key={value} className="balance-grid-line" x1="0" x2={chart.width} y1={pointY(value)} y2={pointY(value)} />)}
-          <g key={period + '-' + replay}>
-            <path key={selectedSeries} className="balance-area-fill" d={path + ' L ' + (chart.width - chart.inset) + ',' + chart.bottom + ' L ' + chart.inset + ',' + chart.bottom + ' Z'} fill={'url(#' + id + '-fill)'} />
-            {series.map((item, index) => (
-              <path
-                key={item.id}
-                className={'balance-curve' + (activeSeries && item.id !== selectedSeries ? ' balance-curve-muted' : '')}
-                d={curvePath(item[period])}
-                fill="none"
-                stroke={item.color}
-                strokeWidth={item.id === selectedSeries ? 3 : 2}
-                pathLength="1"
-                style={{ '--draw-delay': index * 100 + 'ms' }}
-              />
-            ))}
-          </g>
-          <line className="balance-crosshair" x1={x} x2={x} y1={chart.top} y2={chart.bottom} />
-          {series.filter((item) => !activeSeries || item.id === selectedSeries).map((item) => (
-            <g key={item.id} style={{ '--point-color': item.color }}>
-              <circle className="balance-point-halo" cx={x} cy={pointY(item[period][selectedIndex])} r="8" />
-              <circle className="balance-point" cx={x} cy={pointY(item[period][selectedIndex])} r="3.6" />
-            </g>
-          ))}
-        </svg>
-        <div className="balance-point-targets">
-          {labels.map((label, index) => (
+      <div className="activity-calendar-grid" role="group" aria-label={monthTitle + ' activity calendar'}>
+        {weekdays.map((day) => <span className="activity-weekday" aria-hidden="true" key={day}>{day}</span>)}
+        {Array.from({ length: cellCount }, (_, index) => {
+          const dayNumber = index - firstWeekday + 1;
+          if (dayNumber < 1 || dayNumber > daysInMonth) return <span className="activity-day-empty" aria-hidden="true" key={'blank-' + index} />;
+          const dateKey = keyFor(year, monthIndex, dayNumber);
+          const items = activityByDate[dateKey] || [];
+          const count = items.reduce((sum, item) => sum + item.count, 0);
+          const level = count === 0 ? 0 : count === 1 ? 1 : count < 4 ? 2 : 3;
+          const formatted = dayFormatter.format(new Date(dateKey + 'T12:00:00Z'));
+          return (
             <button
               type="button"
-              key={period + '-' + index}
-              ref={(element) => { pointButtons.current[index] = element; }}
-              tabIndex={selectedIndex === index ? 0 : -1}
-              aria-pressed={selectedIndex === index}
-              aria-label={label + '. Balance ' + averageAt(period, index) + ' out of 100. ' + series.map((item) => item.label + ' ' + item[period][index]).join('. ') + '.'}
-              aria-describedby={detailId}
-              onPointerEnter={(event) => { if (event.pointerType !== 'touch') setSelectedIndex(index); }}
-              onFocus={() => setSelectedIndex(index)}
-              onClick={() => setSelectedIndex(index)}
-              onKeyDown={(event) => navigatePoints(event, index)}
-            />
-          ))}
-        </div>
+              key={dateKey}
+              className={'activity-day' + (selectedDate === dateKey ? ' is-selected' : '') + (dateKey === today ? ' is-today' : '')}
+              data-level={level}
+              aria-label={formatted + (count ? ', ' + count + (count === 1 ? ' activity' : ' activities') : ', no activity logged')}
+              aria-pressed={selectedDate === dateKey}
+              disabled={dateKey > today || loading}
+              onClick={() => setSelectedDate(dateKey)}
+            >
+              <span>{dayNumber}</span>{count > 0 && <i aria-hidden="true" />}
+            </button>
+          );
+        })}
       </div>
-      <div className="balance-axis" aria-hidden="true">
-        {axisLabels.map((label) => <span key={period + label} data-translate-ignore={period === 'week' ? 'true' : undefined}>{label}</span>)}
-      </div>
-      <p id={helpId} className="sr-only">Sample data on a scale of 0 to 100. Tap or hover to explore. With the chart focused, use the left and right arrow keys to move between points, or Home and End to jump.</p>
+      <div className="activity-legend"><span>Quiet</span><i data-level="0" /><i data-level="1" /><i data-level="2" /><i data-level="3" /><span>Full</span></div>
 
-      <div className="balance-series-list" role="group" aria-label="Explore a life area">
-        {series.map((item) => (
-          <button
-            type="button"
-            key={item.id}
-            className="balance-series-button"
-            style={{ '--series-color': item.color }}
-            aria-pressed={selectedSeries === item.id}
-            onClick={() => setSelectedSeries((current) => current === item.id ? 'all' : item.id)}
-          >
-            <span className="balance-series-dot" /><span className="balance-series-label">{item.label}</span>
-            <span className="balance-meter" aria-hidden="true"><span style={{ width: item[period][selectedIndex] + '%' }}><i key={replay} /></span></span>
-            <strong data-translate-ignore="true">{item[period][selectedIndex]}<small>%</small></strong>
-          </button>
-        ))}
-      </div>
-      <div className="balance-chart-caption"><span>Sample data</span><span>Hover or tap to explore</span></div>
-      <a className="pulse-note" href="#life-areas"><span className="pulse-note-icon"><Flower2 size={15} /></span><span>Progress is allowed to look like you.</span><ArrowRight size={13} /></a>
+      <section className="activity-day-detail" aria-live="polite" aria-atomic="true">
+        <div className="activity-day-detail-head"><div><span className="eyebrow">YOUR DAY</span><strong>{selectedDateText}</strong></div><span className="activity-day-count">{selectedTotal} {selectedTotal === 1 ? 'step' : 'steps'}</span></div>
+        {error ? <p className="activity-day-empty activity-error">{error}</p> : selectedEvents.length ? (
+          <ul className="activity-event-list">
+            {selectedEvents.map((item) => {
+              const area = areaNames[item.areaSlug] || 'Life area';
+              const task = item.kind === 'task';
+              return <li key={item.kind + '-' + item.areaSlug}><span className={'activity-event-icon' + (task ? ' is-task' : '')}>{task ? <Check size={13} /> : <CircleCheck size={14} />}</span><span>{task ? 'Task finished' : 'Check-in'} · {area}</span><strong>{item.count > 1 ? '×' + item.count : '1'}</strong></li>;
+            })}
+          </ul>
+        ) : <p className="activity-day-empty">{loading ? 'Gathering your activity…' : 'A little blank space is a good place to start.'}</p>}
+      </section>
+      <p className="activity-history-note">Older check-in totals have no dates, so only new activity appears on this calendar.</p>
     </aside>
   );
 }

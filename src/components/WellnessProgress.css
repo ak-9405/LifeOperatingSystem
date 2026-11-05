@@ -1,0 +1,71 @@
+.wellness-progress { margin: 21px 0 0; padding: 20px; border: 1px solid #e4eae0; border-radius: 14px; background: linear-gradient(145deg,#fff,#f8fbf6); box-shadow: 0 9px 26px rgba(42,69,47,.045); }
+.wellness-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+.wellness-heading .eyebrow { display: inline-flex; align-items: center; gap: 6px; color: #769278; font-size: 11px; font-weight: 700; letter-spacing: .11em; }
+.wellness-heading h3 { margin: 8px 0 5px; color: #344c3d; font: 400 25px/1.12 var(--serif); }
+.wellness-heading p { margin: 0; color: #849187; font-size: 13px; line-height: 1.5; }
+.wellness-setup-button { display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto; min-height: 35px; padding: 0 10px; border: 1px solid #dce7d9; border-radius: 8px; color: #47664e; background: #fff; font-size: 12px; font-weight: 650; cursor: pointer; }
+.wellness-setup-button:hover { border-color: #b8cfb5; background: #f7faf5; }
+.wellness-connection { display: grid; grid-template-columns: 34px minmax(0,1fr) auto; align-items: center; gap: 10px; margin-top: 17px; padding: 11px 12px; border: 1px solid #e5ece2; border-radius: 10px; background: rgba(255,255,255,.8); }
+.wellness-connection-icon, .wellness-metric-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; color: #64866a; background: #edf4e9; }
+.wellness-connection > span:nth-child(2) { display: grid; gap: 3px; min-width: 0; }
+.wellness-connection strong { color: #4b6250; font-size: 13px; }
+.wellness-connection small { color: #89968a; font-size: 11px; line-height: 1.45; }
+.wellness-source-status { padding: 5px 7px; border-radius: 5px; color: #6c846b; background: #edf4e9; font-size: 9px; font-weight: 750; letter-spacing: .06em; white-space: nowrap; }
+.wellness-provider-list { display: grid; gap: 0; margin-top: 9px; padding: 13px; border: 1px solid #e3eadf; border-radius: 10px; background: #f8fbf6; }
+.wellness-provider-heading { display: flex; align-items: center; gap: 7px; padding-bottom: 8px; color: #527257; font-size: 12px; font-weight: 700; }
+.wellness-provider-row { display: grid; grid-template-columns: minmax(135px,.55fr) minmax(0,1fr); gap: 10px; padding: 8px 0; border-top: 1px solid #e8eee5; }
+.wellness-provider-row strong { color: #506555; font-size: 12px; }
+.wellness-provider-row span { color: #879489; font-size: 11px; line-height: 1.45; }
+.wellness-provider-list > p { margin: 7px 0 0; color: #78867a; font-size: 11px; line-height: 1.5; }
+.wellness-week-summary { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; margin-top: 14px; }
+.wellness-week-summary > span { display: grid; gap: 3px; padding: 10px; border: 1px solid #e9eee6; border-radius: 9px; background: rgba(255,255,255,.7); }
+.wellness-week-summary strong { color: #43664a; font: 500 19px/1 var(--serif); }
+.wellness-week-summary small { color: #919c91; font-size: 10px; line-height: 1.35; }
+.wellness-metric-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; margin-top: 9px; }
+.wellness-metric-card { position: relative; min-width: 0; padding: 12px; border: 1px solid #e9eee6; border-radius: 10px; background: #fff; }
+.wellness-metric-top { display: flex; align-items: center; gap: 7px; color: #78877b; font-size: 11px; font-weight: 650; }
+.wellness-metric-icon { flex: 0 0 auto; width: 27px; height: 27px; border-radius: 8px; }
+.wellness-metric-value { display: block; margin: 12px 0 8px; overflow-wrap: anywhere; color: #334a3b; font: 400 25px/1.05 var(--serif); }
+.wellness-metric-value small { margin-left: 3px; color: #839185; font: 600 10px/1.3 var(--sans); }
+.wellness-goal-meter { height: 5px; overflow: hidden; border-radius: 999px; background: #edf1e9; }
+.wellness-goal-meter > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#7fa780,#b1cb9b); transition: width .4s ease; }
+.wellness-goal-meter-empty { background: linear-gradient(90deg,#edf1e9 0 55%,#f5f7f3 55% 100%); }
+.wellness-metric-caption { display: block; min-height: 28px; margin-top: 7px; color: #879388; font-size: 10px; line-height: 1.4; }
+.wellness-metric-goal { display: block; margin-top: 5px; color: #648169; font-size: 10px; font-weight: 650; }
+.wellness-data-source { margin-top: 8px; color: #929c93; font-size: 10px; text-align: right; }
+.wellness-data-source strong { color: #6d886e; font-size: 9px; letter-spacing: .05em; }
+.wellness-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.wellness-actions button { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 10px; border: 1px solid #dbe6d7; border-radius: 7px; color: #47664e; background: #f8fbf6; font-size: 11px; font-weight: 650; cursor: pointer; }
+.wellness-actions button:hover { border-color: #afc9aa; background: #eef5ea; }
+.wellness-edit-form { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); align-items: end; gap: 9px; margin-top: 11px; padding: 13px; border: 1px solid #e2eadf; border-radius: 10px; background: #fbfcfa; }
+.wellness-form-title { display: grid; grid-column: 1/-1; gap: 3px; margin-bottom: 1px; }
+.wellness-form-title strong { color: #4a6150; font-size: 13px; }
+.wellness-form-title span { color: #88958a; font-size: 11px; }
+.wellness-edit-form label { display: grid; gap: 5px; color: #6d7d70; font-size: 10px; font-weight: 650; }
+.wellness-edit-form input { width: 100%; min-width: 0; height: 36px; padding: 0 8px; border: 1px solid #dfe7dc; border-radius: 6px; color: #405448; background: #fff; font-size: 12px; }
+.wellness-form-actions { display: flex; grid-column: 1/-1; gap: 7px; }
+.wellness-form-actions button { min-height: 34px; padding: 0 10px; border: 1px solid #c5d8c1; border-radius: 6px; color: #315541; background: #e9f1e5; font-size: 11px; font-weight: 700; cursor: pointer; }
+.wellness-form-actions button + button { color: #6f7e72; border-color: #e2e8df; background: #fff; }
+.wellness-form-actions button:disabled { opacity: .6; cursor: wait; }
+.wellness-footnote { display: flex; align-items: flex-start; gap: 6px; margin-top: 12px; color: #8b978b; font-size: 10px; line-height: 1.5; }
+.wellness-footnote svg { flex: 0 0 auto; margin-top: 1px; color: #86a184; }
+.wellness-locked { display: flex; align-items: center; gap: 10px; margin-top: 15px; padding: 13px; border: 1px solid #e7ece4; border-radius: 9px; color: #7e8c80; background: #fafbf8; }
+.wellness-locked > span { display: grid; place-items: center; flex: 0 0 auto; width: 31px; height: 31px; border-radius: 8px; color: #769279; background: #edf3e9; }
+.wellness-locked p { margin: 0; color: #7e8c80; font-size: 12px; line-height: 1.45; }
+.wellness-status { margin: 9px 0 0; color: #648169; font-size: 11px; line-height: 1.4; }
+@media (max-width: 680px) {
+  .wellness-progress { padding: 16px; }
+  .wellness-edit-form { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 430px) {
+  .wellness-heading h3 { font-size: 22px; }
+  .wellness-week-summary { gap: 6px; }
+  .wellness-week-summary > span { padding: 8px 7px; }
+  .wellness-week-summary strong { font-size: 17px; }
+  .wellness-week-summary small { font-size: 9px; }
+  .wellness-metric-grid { grid-template-columns: 1fr; }
+  .wellness-metric-value { font-size: 28px; }
+  .wellness-connection { grid-template-columns: 30px minmax(0,1fr); }
+  .wellness-source-status { grid-column: 2; justify-self: start; }
+  .wellness-provider-row { grid-template-columns: 1fr; gap: 3px; }
+}

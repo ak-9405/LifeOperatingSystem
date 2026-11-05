@@ -39,9 +39,16 @@ services:
     command: ["npm", "run", "server"]
     environment:
       PORT: 4000
+      LIFEOS_LOCAL_DEMO: "true"
       DATABASE_URL: postgresql://lifeos:${POSTGRES_PASSWORD:-lifeos_dev}@database:5432/lifeos
       TRANSLATION_SERVICE_URL: http://translator:5000/translate
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:5173}
+      SMTP_URL: ${SMTP_URL:-}
+      EMAIL_FROM: "${EMAIL_FROM:-Life OS <no-reply@example.com>}"
     depends_on:
       database:
         condition: service_healthy

@@ -1,6 +1,7 @@
 import { createHash, randomBytes, scrypt as scryptCallback, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import express from 'express';
+import { greetingEmailEnabled, sendGreetingEmail } from './email.js';
 
 const scrypt = promisify(scryptCallback);
 const PASSWORD_COST = 131072;
@@ -12,6 +13,8 @@ const SESSION_LIFETIME_SECONDS = 60 * 60 * 24 * 14;
 const AUTH_WINDOW_MS = 15 * 60 * 1000;
 const AUTH_WINDOW_LIMIT = 20;
 const authAttempts = new Map();
+const DEMO_EMAIL = 'admin@lifeos.local';
+const localDemoEnabled = process.env.LIFEOS_LOCAL_DEMO === 'true' && process.env.NODE_ENV !== 'production';
 const cookieSecure = process.env.COOKIE_SECURE === 'true';
 const cookieName = cookieSecure ? '__Host-lifeos.sid' : 'lifeos.sid';
 let dummyHashPromise;
@@ -30,8 +33,11 @@ export async function ensureAuthSchema(pool) {
       "name VARCHAR(100) NOT NULL, " +
       "email VARCHAR(254) NOT NULL, " +
       "password_hash TEXT NOT NULL, " +
+      "google_sub VARCHAR(255), " +
       "created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()" +
     ");" +
+    "ALTER TABLE users ADD COLUMN IF NOT EXISTS google_sub VARCHAR(255);" +
+    "CREATE UNIQUE INDEX IF NOT EXISTS users_google_sub_idx ON users (google_sub) WHERE google_sub IS NOT NULL;" +
     "CREATE UNIQUE INDEX IF NOT EXISTS users_email_lower_idx ON users (LOWER(email));" +
     "CREATE TABLE IF NOT EXISTS auth_sessions (" +
       "token_hash CHAR(64) PRIMARY KEY, " +
@@ -47,7 +53,17 @@ export async function ensureAuthSchema(pool) {
       "check_ins INTEGER NOT NULL DEFAULT 0 CHECK (check_ins >= 0), " +
       "updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), " +
       "PRIMARY KEY (user_id, area_slug)" +
-    ")",
+    ");",
+  );
+  await pool.query(
+    "CREATE TABLE IF NOT EXISTS life_area_check_ins (" +
+      "id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, " +
+      "user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, " +
+      "area_slug VARCHAR(32) NOT NULL, " +
+      "activity_date DATE NOT NULL DEFAULT CURRENT_DATE, " +
+      "created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()" +
+    ");" +
+    "CREATE INDEX IF NOT EXISTS life_area_check_ins_user_date_idx ON life_area_check_ins (user_id, activity_date)"
   );
 }
 
@@ -60,7 +76,15 @@ export function createAuthRouter(pool) {
 
   router.get('/me', async (request, response) => {
     const token = readSessionToken(request);
-    if (!token) return response.json({ user: null });
+    if (!token) {
+      try {
+        const demoUser = await startLocalDemoSession(pool, request, response);
+        return response.json({ user: demoUser });
+      } catch (error) {
+        console.error('Could not open the local demo account:', error.message);
+        return response.status(503).json({ error: 'The local demo account could not be loaded.' });
+      }
+    }
 
     try {
       const result = await pool.query(
@@ -73,7 +97,8 @@ export function createAuthRouter(pool) {
       if (!result.rowCount) {
         await pool.query('DELETE FROM auth_sessions WHERE token_hash = $1', [hashSessionToken(token)]);
         clearSessionCookie(response);
-        return response.json({ user: null });
+        const demoUser = await startLocalDemoSession(pool, request, response);
+        return response.json({ user: demoUser });
       }
 
       return response.json({ user: publicUser(result.rows[0]) });
@@ -83,6 +108,106 @@ export function createAuthRouter(pool) {
     }
   });
 
+  router.get('/google/status', (_request, response) => {
+    const redirectConfigured = process.env.NODE_ENV !== 'production' || Boolean(process.env.GOOGLE_REDIRECT_URI);
+    response.json({
+      googleEnabled: Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && redirectConfigured),
+      greetingEmailsEnabled: greetingEmailEnabled(),
+    });
+  });
+
+  router.get('/google', (request, response) => {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET ||
+      (process.env.NODE_ENV === 'production' && !process.env.GOOGLE_REDIRECT_URI)) {
+      return response.status(503).send('Google sign-in is not configured yet. Add the Google OAuth settings to the server environment.');
+    }
+    const state = randomBytes(32).toString('base64url');
+    setGoogleStateCookie(response, state);
+    const query = new URLSearchParams({
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      redirect_uri: googleRedirectUri(),
+      response_type: 'code',
+      scope: 'openid email profile',
+      state,
+      prompt: 'select_account',
+    });
+    return response.redirect('https://accounts.google.com/o/oauth2/v2/auth?' + query.toString());
+  });
+
+  router.get('/google/callback', async (request, response) => {
+    const expectedState = readCookie(request, 'lifeos.google.state');
+    clearGoogleStateCookie(response);
+    if (!expectedState || !request.query.state || !safeEqual(expectedState, String(request.query.state))) {
+      return response.redirect(appRedirect('google-error'));
+    }
+    if (request.query.error || typeof request.query.code !== 'string') {
+      return response.redirect(appRedirect('google-cancelled'));
+    }
+
+    try {
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          code: request.query.code,
+          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          redirect_uri: googleRedirectUri(),
+          grant_type: 'authorization_code',
+        }),
+      });
+      const tokens = await tokenResponse.json();
+      if (!tokenResponse.ok || typeof tokens.access_token !== 'string') {
+        throw new Error('Google did not complete sign-in.');
+      }
+
+      const profileResponse = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
+        headers: { Authorization: 'Bearer ' + tokens.access_token },
+      });
+      const profile = await profileResponse.json();
+      const email = normalizeEmail(profile.email);
+      if (!profileResponse.ok || typeof profile.sub !== 'string' || !isValidEmail(email) ||
+        (profile.email_verified !== true && profile.email_verified !== 'true')) {
+        throw new Error('Google did not return a verified email address.');
+      }
+
+      let userResult = await pool.query(
+        'SELECT id, name, email FROM users WHERE google_sub = $1',
+        [profile.sub],
+      );
+      let newAccount = false;
+      if (!userResult.rowCount) {
+        const emailAccount = await pool.query('SELECT id FROM users WHERE LOWER(email) = $1', [email]);
+        if (emailAccount.rowCount) return response.redirect(appRedirect('google-email-conflict'));
+        const passwordHash = await hashPassword(randomBytes(32).toString('base64url'));
+        const name = typeof profile.name === 'string' && profile.name.trim()
+          ? profile.name.trim().slice(0, 100)
+          : email.split('@')[0].slice(0, 100);
+        try {
+          userResult = await pool.query(
+            'INSERT INTO users (name, email, password_hash, google_sub) VALUES ($1, $2, $3, $4) RETURNING id, name, email',
+            [name, email, passwordHash, profile.sub],
+          );
+          newAccount = true;
+        } catch (error) {
+          if (error.code !== '23505') throw error;
+          userResult = await pool.query(
+            'SELECT id, name, email FROM users WHERE google_sub = $1',
+            [profile.sub],
+          );
+          if (!userResult.rowCount) throw error;
+        }
+      }
+
+      const user = userResult.rows[0];
+      await createSession(pool, user, response);
+      void sendGreetingEmail(user, { newAccount });
+      return response.redirect(appRedirect('google-success'));
+    } catch (error) {
+      console.error('Could not complete Google sign-in:', error.message);
+      return response.redirect(appRedirect('google-error'));
+    }
+  });
   router.post('/signup', limitAuthAttempts, async (request, response) => {
     const name = typeof request.body?.name === 'string' ? request.body.name.trim() : '';
     const email = normalizeEmail(request.body?.email);
@@ -104,6 +229,7 @@ export function createAuthRouter(pool) {
       );
 
       await createSession(pool, result.rows[0], response);
+      void sendGreetingEmail(result.rows[0], { newAccount: true });
       return response.status(201).json({ user: publicUser(result.rows[0]) });
     } catch (error) {
       if (error.code === '23505') {
@@ -136,6 +262,7 @@ export function createAuthRouter(pool) {
       }
 
       await createSession(pool, user, response);
+      void sendGreetingEmail(user);
       return response.json({ user: publicUser(user) });
     } catch (error) {
       console.error('Could not sign in:', error.message);
@@ -203,15 +330,61 @@ async function createSession(pool, user, response) {
     'Max-Age=' + SESSION_LIFETIME_SECONDS,
   ];
   if (cookieSecure) parts.push('Secure');
-  response.setHeader('Set-Cookie', parts.join('; '));
+  response.append('Set-Cookie', parts.join('; '));
 }
 
-function clearSessionCookie(response) {
+export function clearSessionCookie(response) {
   const parts = [cookieName + '=', 'Path=/', 'HttpOnly', 'SameSite=Lax', 'Max-Age=0'];
   if (cookieSecure) parts.push('Secure');
-  response.setHeader('Set-Cookie', parts.join('; '));
+  response.append('Set-Cookie', parts.join('; '));
 }
 
+function googleRedirectUri() {
+  return process.env.GOOGLE_REDIRECT_URI || 'http://localhost:4000/api/auth/google/callback';
+}
+
+function appRedirect(status) {
+  const destination = new URL('/', process.env.APP_BASE_URL || 'http://localhost:5173');
+  destination.searchParams.set('auth', status);
+  return destination.toString();
+}
+
+function setGoogleStateCookie(response, state) {
+  const parts = [
+    'lifeos.google.state=' + encodeURIComponent(state),
+    'Path=/api/auth/google',
+    'HttpOnly',
+    'SameSite=Lax',
+    'Max-Age=600',
+  ];
+  if (cookieSecure) parts.push('Secure');
+  response.append('Set-Cookie', parts.join('; '));
+}
+
+function clearGoogleStateCookie(response) {
+  const parts = ['lifeos.google.state=', 'Path=/api/auth/google', 'HttpOnly', 'SameSite=Lax', 'Max-Age=0'];
+  if (cookieSecure) parts.push('Secure');
+  response.append('Set-Cookie', parts.join('; '));
+}
+
+function readCookie(request, name) {
+  for (const cookie of (request.headers.cookie || '').split(';')) {
+    const separator = cookie.indexOf('=');
+    if (separator < 0 || cookie.slice(0, separator).trim() !== name) continue;
+    try {
+      return decodeURIComponent(cookie.slice(separator + 1).trim());
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+function safeEqual(left, right) {
+  const leftBuffer = Buffer.from(left);
+  const rightBuffer = Buffer.from(right);
+  return leftBuffer.length === rightBuffer.length && timingSafeEqual(leftBuffer, rightBuffer);
+}
 function readSessionToken(request) {
   const cookieHeader = request.headers.cookie || '';
   for (const cookie of cookieHeader.split(';')) {
@@ -278,8 +451,62 @@ function isValidEmail(value) {
   return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+async function startLocalDemoSession(pool, request, response) {
+  if (!localDemoEnabled || !isLocalBrowserRequest(request)) return null;
+  const user = await getOrCreateDemoUser(pool);
+  await seedDemoWorkspace(pool, user.id);
+  await createSession(pool, user, response);
+  return publicUser(user);
+}
+
+function isLocalBrowserRequest(request) {
+  const source = request.get('origin') || request.get('referer') || '';
+  if (!source) return false;
+  try {
+    return ['localhost', '127.0.0.1', '::1'].includes(new URL(source).hostname);
+  } catch {
+    return false;
+  }
+}
+
+async function getOrCreateDemoUser(pool) {
+  const existing = await pool.query('SELECT id, name, email FROM users WHERE LOWER(email) = $1', [DEMO_EMAIL]);
+  if (existing.rowCount) return existing.rows[0];
+  const passwordHash = await hashPassword(randomBytes(32).toString('base64url'));
+  const created = await pool.query(
+    'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING RETURNING id, name, email',
+    ['Admin', DEMO_EMAIL, passwordHash],
+  );
+  if (created.rowCount) return created.rows[0];
+  const raced = await pool.query('SELECT id, name, email FROM users WHERE LOWER(email) = $1', [DEMO_EMAIL]);
+  if (!raced.rowCount) throw new Error('The demo account was not created.');
+  return raced.rows[0];
+}
+
+async function seedDemoWorkspace(pool, userId) {
+  await pool.query(
+    'INSERT INTO health_daily_metrics (user_id, metric_date, steps, sleep_minutes, resting_pulse, source) ' +
+      "SELECT $1, CURRENT_DATE - sample.days_back, sample.steps, sample.sleep_minutes, sample.resting_pulse, 'demo' " +
+      'FROM (VALUES (0, 7320, 445, 62), (1, 8460, 472, 61), (2, 6910, 428, 64), ' +
+      '(3, 9100, 461, 60), (4, 7770, 439, 63), (5, 6240, 415, 65), (6, 8020, 480, 61)) ' +
+      'AS sample(days_back, steps, sleep_minutes, resting_pulse) ' +
+      'ON CONFLICT (user_id, metric_date) DO NOTHING',
+    [userId],
+  );
+  await pool.query(
+    "INSERT INTO health_goals (user_id, metric_key, target_value) VALUES ($1, 'steps', 8000), ($1, 'sleep', 480) " +
+      'ON CONFLICT (user_id, metric_key) DO NOTHING',
+    [userId],
+  );
+  await pool.query(
+    'INSERT INTO life_tasks (user_id, task_id, title, area_slug, estimated_minutes, completed, task_date, reminder_time) ' +
+      "VALUES ($1, 'demo-walk', 'Sample: Take a short morning walk', 'health', 15, FALSE, CURRENT_DATE + 1, '09:00') " +
+      'ON CONFLICT (user_id, task_id) DO NOTHING',
+    [userId],
+  );
+}
 function publicUser(user) {
-  return { id: String(user.id), name: user.name, email: user.email };
+  return { id: String(user.id), name: user.name, email: user.email, demo: user.email === DEMO_EMAIL };
 }
 
 function limitAuthAttempts(request, response, next) {

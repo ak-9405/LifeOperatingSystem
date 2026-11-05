@@ -2,7 +2,11 @@ import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
 import { createAuthRouter, createRequireAuth, ensureAuthSchema } from './auth.js';
+import { createAccountRouter } from './account.js';
 import { createLifeAreaRouter } from './life-areas.js';
+import { createTaskRouter, ensureTaskSchema } from './tasks.js';
+import { createHealthRouter, ensureHealthSchema } from './health.js';
+import { createQuoteRouter, ensureQuoteSchema } from './quotes.js';
 
 const { Pool } = pg;
 const app = express();
@@ -22,8 +26,10 @@ app.use(express.json({ limit: '16kb' }));
 
 const requireAuth = createRequireAuth(pool);
 app.use('/api/auth', createAuthRouter(pool));
+app.use('/api/account', createAccountRouter(pool, requireAuth));
 app.use('/api/life-areas', createLifeAreaRouter(pool, requireAuth));
-
+app.use('/api/tasks', createTaskRouter(pool, requireAuth));
+app.use('/api/quotes', createQuoteRouter(pool, requireAuth));
 app.get('/api/health', async (_request, response) => {
   try {
     await pool.query('SELECT 1');
@@ -33,7 +39,10 @@ app.get('/api/health', async (_request, response) => {
   }
 });
 
-app.post('/api/contact', async (request, response) => {
+app.use('/api/health', createHealthRouter(pool, requireAuth));
+
+
+app.post('/api/contact', requireAuth, async (request, response) => {
   const { name, email, area, message } = request.body ?? {};
   const cleanName = typeof name === 'string' ? name.trim() : '';
   const cleanEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
@@ -115,6 +124,9 @@ app.post('/api/translate', async (request, response) => {
 
 async function startServer() {
   await ensureAuthSchema(pool);
+  await ensureTaskSchema(pool);
+  await ensureHealthSchema(pool);
+  await ensureQuoteSchema(pool);
   app.listen(port, '0.0.0.0', () => {
     console.log('Life OS API listening on http://localhost:' + port);
   });

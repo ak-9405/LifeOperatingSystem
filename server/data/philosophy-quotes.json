@@ -1,0 +1,902 @@
+[
+  {
+    "id": "classic-001",
+    "text": "Give thyself time to learn something new and good, and cease to be whirled around.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 1
+  },
+  {
+    "id": "classic-002",
+    "text": "There are things which are within our power, and there are things which are beyond our power.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 2
+  },
+  {
+    "id": "classic-003",
+    "text": "Is it not pleasant to learn with a constant perseverance and application?",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 3
+  },
+  {
+    "id": "classic-004",
+    "text": "The Tao that can be trodden is not the enduring and unchanging Tao.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 4
+  },
+  {
+    "id": "classic-005",
+    "text": "The unexamined life is not worth living",
+    "author": "Socrates",
+    "work": "Apology — Socrates as portrayed by Plato",
+    "translator": "Benjamin Jowett",
+    "source_url": "https://www.gutenberg.org/ebooks/1656",
+    "display_order": 5
+  },
+  {
+    "id": "classic-006",
+    "text": "All these things happen to them by reason of their ignorance of what is good and evil.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 6
+  },
+  {
+    "id": "classic-007",
+    "text": "Within our power are opinion, aim, desire, aversion, and, in one word, whatever affairs are our own.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 7
+  },
+  {
+    "id": "classic-008",
+    "text": "Is it not delightful to have friends coming from distant quarters?",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 8
+  },
+  {
+    "id": "classic-009",
+    "text": "The name that can be named is not the enduring and unchanging name.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 9
+  },
+  {
+    "id": "classic-010",
+    "text": "I neither know nor think that I know.",
+    "author": "Socrates",
+    "work": "Apology — Socrates as portrayed by Plato",
+    "translator": "Benjamin Jowett",
+    "source_url": "https://www.gutenberg.org/ebooks/1656",
+    "display_order": 10
+  },
+  {
+    "id": "classic-011",
+    "text": "Whatever this is that I am, it is a little flesh and breath, and the ruling part.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 11
+  },
+  {
+    "id": "classic-012",
+    "text": "Where it is practically necessary for you to pursue or avoid anything, do even this with discretion and gentleness and moderation.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 12
+  },
+  {
+    "id": "classic-013",
+    "text": "Fine words and an insinuating appearance are seldom associated with true virtue.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 13
+  },
+  {
+    "id": "classic-014",
+    "text": "Where the Mystery is the deepest is the gate of all that is subtle and wonderful.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 14
+  },
+  {
+    "id": "classic-015",
+    "text": "I would rather die having spoken after my manner, than speak in your manner and live.",
+    "author": "Socrates",
+    "work": "Apology — Socrates as portrayed by Plato",
+    "translator": "Benjamin Jowett",
+    "source_url": "https://www.gutenberg.org/ebooks/1656",
+    "display_order": 15
+  },
+  {
+    "id": "classic-016",
+    "text": "Let these principles be enough for thee; let them always be fixed opinions.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 16
+  },
+  {
+    "id": "classic-017",
+    "text": "Lameness is an impediment to the leg, but not to the will; and say this to yourself with regard to everything that happens.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 17
+  },
+  {
+    "id": "classic-018",
+    "text": "He should overflow in love to all, and cultivate the friendship of the good.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 18
+  },
+  {
+    "id": "classic-019",
+    "text": "The work is accomplished, and there is no resting in it (as an achievement).",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 19
+  },
+  {
+    "id": "classic-020",
+    "text": "The difficulty, my friends, is not to avoid death, but to avoid unrighteousness; for that runs faster than death.",
+    "author": "Socrates",
+    "work": "Apology — Socrates as portrayed by Plato",
+    "translator": "Benjamin Jowett",
+    "source_url": "https://www.gutenberg.org/ebooks/1656",
+    "display_order": 20
+  },
+  {
+    "id": "classic-021",
+    "text": "Remember how long thou hast been putting off these things, and how often thou hast received an opportunity from the gods, and yet dost not use it.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 21
+  },
+  {
+    "id": "classic-022",
+    "text": "And when thus habituated, the phenomena of existence will not overwhelm you.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 22
+  },
+  {
+    "id": "classic-023",
+    "text": "Hold faithfulness and sincerity as first principles.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 23
+  },
+  {
+    "id": "classic-024",
+    "text": "The highest excellence is like (that of) water.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 24
+  },
+  {
+    "id": "classic-025",
+    "text": "Is not this ignorance of a disgraceful sort, the ignorance which is the conceit that a man knows what he does not know?",
+    "author": "Socrates",
+    "work": "Apology — Socrates as portrayed by Plato",
+    "translator": "Benjamin Jowett",
+    "source_url": "https://www.gutenberg.org/ebooks/1656",
+    "display_order": 25
+  },
+  {
+    "id": "classic-026",
+    "text": "Begin the morning by saying to thyself, I shall meet with the busybody, the ungrateful, arrogant, deceitful, envious, unsocial.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 26
+  },
+  {
+    "id": "classic-027",
+    "text": "While he permits you to possess it, hold it as something not your own, as do travelers at an inn.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 27
+  },
+  {
+    "id": "classic-028",
+    "text": "When you have faults, do not fear to abandon them.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 28
+  },
+  {
+    "id": "classic-029",
+    "text": "It is better to leave a vessel unfilled, than to attempt to carry it when it is full.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 29
+  },
+  {
+    "id": "classic-030",
+    "text": "And is there anyone who would rather be injured than benefited by those who live with him?",
+    "author": "Socrates",
+    "work": "Apology — Socrates as portrayed by Plato",
+    "translator": "Benjamin Jowett",
+    "source_url": "https://www.gutenberg.org/ebooks/1656",
+    "display_order": 30
+  },
+  {
+    "id": "classic-031",
+    "text": "Now that which does not make a man worse, how can it make a man's life worse?",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 31
+  },
+  {
+    "id": "classic-032",
+    "text": "Say to yourself, “This is the price paid for peace and tranquillity; and nothing is to be had for nothing.”",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 32
+  },
+  {
+    "id": "classic-033",
+    "text": "I will not be afflicted at men's not knowing me; I will be afflicted that I do not know men.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 33
+  },
+  {
+    "id": "classic-034",
+    "text": "If you keep feeling a point that has been sharpened, the point cannot long preserve its sharpness.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 34
+  },
+  {
+    "id": "classic-035",
+    "text": "I tell you that virtue is not given by money, but that from virtue comes money and every other good of man, public as well as private.",
+    "author": "Socrates",
+    "work": "Apology — Socrates as portrayed by Plato",
+    "translator": "Benjamin Jowett",
+    "source_url": "https://www.gutenberg.org/ebooks/1656",
+    "display_order": 35
+  },
+  {
+    "id": "classic-036",
+    "text": "How quickly all things disappear,--in the universe the bodies themselves, but in time the remembrance of them.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 36
+  },
+  {
+    "id": "classic-037",
+    "text": "Do not desire to be thought to know anything; and though you should appear to others to be somebody, distrust yourself.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 37
+  },
+  {
+    "id": "classic-038",
+    "text": "If a man keeps cherishing his old knowledge, so as continually to be acquiring new, he may be a teacher of others.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 38
+  },
+  {
+    "id": "classic-039",
+    "text": "Clay is fashioned into vessels; but it is on their empty hollowness, that their use depends.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 39
+  },
+  {
+    "id": "classic-040",
+    "text": "Nothing will injure me, not Meletus nor yet Anytus—they cannot, for a bad man is not permitted to injure a better than himself.",
+    "author": "Socrates",
+    "work": "Apology — Socrates as portrayed by Plato",
+    "translator": "Benjamin Jowett",
+    "source_url": "https://www.gutenberg.org/ebooks/1656",
+    "display_order": 40
+  },
+  {
+    "id": "classic-041",
+    "text": "For a man cannot lose either the past or the future: for what a man has not, how can any one take this from him?",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 41
+  },
+  {
+    "id": "classic-042",
+    "text": "But if you wish not to be disappointed in your desires, that is in your own power.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 42
+  },
+  {
+    "id": "classic-043",
+    "text": "He acts before he speaks, and afterwards speaks according to his actions.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 43
+  },
+  {
+    "id": "classic-044",
+    "text": "Let it be still, and it will gradually become clear.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 44
+  },
+  {
+    "id": "classic-045",
+    "text": "What infinite delight would there be in conversing with them and asking them questions!",
+    "author": "Socrates",
+    "work": "Apology — Socrates as portrayed by Plato",
+    "translator": "Benjamin Jowett",
+    "source_url": "https://www.gutenberg.org/ebooks/1656",
+    "display_order": 45
+  },
+  {
+    "id": "classic-046",
+    "text": "For it is according to nature, and nothing is evil which is according to nature.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 46
+  },
+  {
+    "id": "classic-047",
+    "text": "Whoever then would be free, let him wish nothing, let him decline nothing, which depends on others; else he must necessarily be a slave.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 47
+  },
+  {
+    "id": "classic-048",
+    "text": "Learning without thought is labour lost; thought without learning is perilous.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 48
+  },
+  {
+    "id": "classic-049",
+    "text": "Let movement go on, and the condition of rest will gradually arise.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 49
+  },
+  {
+    "id": "classic-050",
+    "text": "He ought only to consider whether in doing anything he is doing right or wrong—acting the part of a good man or of a bad.",
+    "author": "Socrates",
+    "work": "Apology — Socrates as portrayed by Plato",
+    "translator": "Benjamin Jowett",
+    "source_url": "https://www.gutenberg.org/ebooks/1656",
+    "display_order": 50
+  },
+  {
+    "id": "classic-051",
+    "text": "Thou hast embarked, thou hast made the voyage, thou art come to shore; get out.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 51
+  },
+  {
+    "id": "classic-052",
+    "text": "For this is your business—to act well the given part, but to choose it belongs to another.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 52
+  },
+  {
+    "id": "classic-053",
+    "text": "When you know a thing, to hold that you know it; and when you do not know a thing, to allow that you do not know it;-- this is knowledge.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 53
+  },
+  {
+    "id": "classic-054",
+    "text": "He who knows other men is discerning; he who knows himself is intelligent.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 54
+  },
+  {
+    "id": "classic-055",
+    "text": "Do not waste the remainder of thy life in thoughts about others, when thou dost not refer thy thoughts to some object of common utility.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 55
+  },
+  {
+    "id": "classic-056",
+    "text": "When, therefore, anyone provokes you, be assured that it is your own opinion which provokes you.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 56
+  },
+  {
+    "id": "classic-057",
+    "text": "I do not know how a man without truthfulness is to get on.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 57
+  },
+  {
+    "id": "classic-058",
+    "text": "He who overcomes others is strong; he who overcomes himself is mighty.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 58
+  },
+  {
+    "id": "classic-059",
+    "text": "Be cheerful also, and seek not external help nor the tranquillity which others give.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 59
+  },
+  {
+    "id": "classic-060",
+    "text": "Try, therefore, in the first place, not to be bewildered by appearances.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 60
+  },
+  {
+    "id": "classic-061",
+    "text": "To see what is right and not to do it is want of courage.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 61
+  },
+  {
+    "id": "classic-062",
+    "text": "He who is satisfied with his lot is rich; he who goes on acting with energy has a (firm) will.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 62
+  },
+  {
+    "id": "classic-063",
+    "text": "A man then must stand erect, not be kept erect by others.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 63
+  },
+  {
+    "id": "classic-064",
+    "text": "For if you once gain time and respite, you will more easily command yourself.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 64
+  },
+  {
+    "id": "classic-065",
+    "text": "If the will be set on virtue, there will be no practice of wickedness.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 65
+  },
+  {
+    "id": "classic-066",
+    "text": "The soft overcomes the hard; and the weak the strong.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 66
+  },
+  {
+    "id": "classic-067",
+    "text": "Reverence the faculty which produces opinion.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 67
+  },
+  {
+    "id": "classic-068",
+    "text": "Be content, then, in everything, with being a philosopher; and if you wish to seem so likewise to anyone, appear so to yourself, and it will suffice you.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 68
+  },
+  {
+    "id": "classic-069",
+    "text": "The superior man, in the world, does not set his mind either for anything, or against anything; what is right he will follow.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 69
+  },
+  {
+    "id": "classic-070",
+    "text": "He who lightly promises is sure to keep but little faith; he who is continually thinking things easy is sure to find them difficult.",
+    "author": "Laozi",
+    "work": "Tao Te Ching (Tao Teh King)",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/216",
+    "display_order": 70
+  },
+  {
+    "id": "classic-071",
+    "text": "And this faculty promises freedom from hasty judgment, and friendship towards men, and obedience to the gods.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 71
+  },
+  {
+    "id": "classic-072",
+    "text": "It is enough if everyone fully performs his own proper business.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 72
+  },
+  {
+    "id": "classic-073",
+    "text": "The superior man thinks of virtue; the small man thinks of comfort.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 73
+  },
+  {
+    "id": "classic-074",
+    "text": "Let no act be done without a purpose, nor otherwise than according to the perfect principles of art.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 74
+  },
+  {
+    "id": "classic-075",
+    "text": "Whatever you can hold with the preservation of your fidelity and honor.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 75
+  },
+  {
+    "id": "classic-076",
+    "text": "The superior man wishes to be slow in his speech and earnest in his conduct.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 76
+  },
+  {
+    "id": "classic-077",
+    "text": "One is that things do not touch the soul, for they are external and remain immovable; but our perturbations come only from the opinion which is within.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 77
+  },
+  {
+    "id": "classic-078",
+    "text": "Be mostly silent, or speak merely what is needful, and in few words.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 78
+  },
+  {
+    "id": "classic-079",
+    "text": "They are, in regard to the aged, to give them rest; in regard to friends, to show them sincerity; in regard to the young, to treat them tenderly.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 79
+  },
+  {
+    "id": "classic-080",
+    "text": "The universe is transformation: life is opinion.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 80
+  },
+  {
+    "id": "classic-081",
+    "text": "But cut off everything that looks toward show and luxury.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 81
+  },
+  {
+    "id": "classic-082",
+    "text": "The superior man is satisfied and composed; the mean man is always full of distress.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 82
+  },
+  {
+    "id": "classic-083",
+    "text": "Take away thy opinion, and then there is taken away the complaint, \"I have been harmed.\"",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 83
+  },
+  {
+    "id": "classic-084",
+    "text": "In company, avoid a frequent and excessive mention of your own actions and dangers.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 84
+  },
+  {
+    "id": "classic-085",
+    "text": "The superior man has neither anxiety nor fear.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 85
+  },
+  {
+    "id": "classic-086",
+    "text": "Take away the complaint, \"I have been harmed,\" and the harm is taken away.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 86
+  },
+  {
+    "id": "classic-087",
+    "text": "These things should be done incidentally and our main strength be applied to our reason.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 87
+  },
+  {
+    "id": "classic-088",
+    "text": "The superior man seeks to perfect the admirable qualities of men, and does not seek to perfect their bad qualities.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 88
+  },
+  {
+    "id": "classic-089",
+    "text": "That which does not make a man worse than he was, also does not make his life worse, nor does it harm him either from without or from within.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 89
+  },
+  {
+    "id": "classic-090",
+    "text": "But you, after all, consist neither in property nor in style.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 90
+  },
+  {
+    "id": "classic-091",
+    "text": "The superior man has a dignified ease without pride.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 91
+  },
+  {
+    "id": "classic-092",
+    "text": "Consider that everything which happens, happens justly, and if thou observest carefully, thou wilt find it to be so.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 92
+  },
+  {
+    "id": "classic-093",
+    "text": "For unless you perfectly understand his motives, how should you know if he acts ill?",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 93
+  },
+  {
+    "id": "classic-094",
+    "text": "The firm, the enduring, the simple, and the modest are near to virtue.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 94
+  },
+  {
+    "id": "classic-095",
+    "text": "Do not have such an opinion of things as he has who does thee wrong, or such as he wishes thee to have, but look at them as they are in truth.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 95
+  },
+  {
+    "id": "classic-096",
+    "text": "The condition and characteristic of a philosopher is that he looks to himself for all help or harm.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 96
+  },
+  {
+    "id": "classic-097",
+    "text": "The superior man is modest in his speech, but exceeds in his actions.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 97
+  },
+  {
+    "id": "classic-098",
+    "text": "If it is not right, do not do it: if it is not true, do not say it.",
+    "author": "Marcus Aurelius",
+    "work": "Meditations",
+    "translator": "George Long",
+    "source_url": "https://www.gutenberg.org/ebooks/15877",
+    "display_order": 98
+  },
+  {
+    "id": "classic-099",
+    "text": "Let whatever appears to be the best be to you an inviolable law.",
+    "author": "Epictetus",
+    "work": "Enchiridion",
+    "translator": "Thomas Wentworth Higginson",
+    "source_url": "https://www.gutenberg.org/ebooks/45109",
+    "display_order": 99
+  },
+  {
+    "id": "classic-100",
+    "text": "To have faults and not to reform them,-- this, indeed, should be pronounced having faults.",
+    "author": "Confucius",
+    "work": "Analects",
+    "translator": "James Legge",
+    "source_url": "https://www.gutenberg.org/ebooks/3330",
+    "display_order": 100
+  }
+]

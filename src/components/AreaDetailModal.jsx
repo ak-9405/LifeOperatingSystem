@@ -24,8 +24,10 @@ const nextSteps = {
 
 export default function AreaDetailModal({
   area,
+  presentation = 'modal',
   saved = {},
   signedIn,
+  demo,
   onClose,
   onCheckIn,
   onSaveIntention,
@@ -37,20 +39,23 @@ export default function AreaDetailModal({
   const dialogRef = useRef(null);
   const Icon = area.icon;
   const checkIns = Number(saved.checkIns || 0);
-  const progress = Math.min(100, area.progress + checkIns * 2);
+  const useSample = !signedIn && !checkIns && !saved.intention;
+  const displayValue = useSample ? area.value : checkIns ? checkIns + (checkIns === 1 ? ' check-in' : ' check-ins') : saved.intention ? 'Intention set' : 'No activity yet';
+  const displayDetail = useSample ? area.detail : saved.intention || (checkIns ? 'Your saved check-ins in this area.' : 'Nothing has been logged in this area yet.');
 
   useEffect(() => {
     setIntention(saved.intention || '');
   }, [area.slug, saved.intention]);
 
   useEffect(() => {
+    if (presentation === 'page') return undefined;
     dialogRef.current?.focus();
     const onKeyDown = (event) => {
       if (event.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+  }, [onClose, presentation]);
 
   async function save(event) {
     event.preventDefault();
@@ -68,26 +73,35 @@ export default function AreaDetailModal({
   }
 
   return (
-    <div className="modal-scrim" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <section className="area-dialog" role="dialog" aria-modal="true" aria-labelledby="area-dialog-title" ref={dialogRef} tabIndex={-1}>
+    <div className={presentation === 'page' ? 'area-page-panel' : 'modal-scrim'} onMouseDown={(event) => presentation !== 'page' && event.target === event.currentTarget && onClose()}>
+      <section className={'area-dialog' + (presentation === 'page' ? ' page-panel' : '')} role={presentation === 'page' ? 'region' : 'dialog'} aria-modal={presentation === 'page' ? undefined : true} aria-labelledby="area-dialog-title" ref={dialogRef} tabIndex={-1}>
         <div className="area-dialog-top">
           <span className={'area-dialog-icon tone-' + area.tone}><Icon size={19} /></span>
-          <button className="icon-button" type="button" aria-label="Close life area" onClick={onClose}><X size={18} /></button>
+          {presentation !== 'page' && <button className="icon-button" type="button" aria-label="Close life area" onClick={onClose}><X size={18} /></button>}
         </div>
 
         <span className="eyebrow area-dialog-eyebrow">YOUR LIFE, IN CONTEXT</span>
         <div className="area-dialog-title-row">
           <div>
-            <h2 id="area-dialog-title">{area.title}</h2>
-            <p>{area.detail}</p>
+            {presentation === 'page' ? <h1 id="area-dialog-title">{area.title}</h1> : <h2 id="area-dialog-title">{area.title}</h2>}
+            <p>{displayDetail}</p>
           </div>
-          <div className="area-dialog-value">{area.value}</div>
+          <div className="area-dialog-value">{displayValue}</div>
         </div>
 
         <div className="area-dialog-progress">
-          <div><span>Your rhythm</span><strong>{progress}%</strong></div>
-          <div className="area-dialog-progress-track"><span style={{ width: progress + '%' }} /></div>
-          <small>{checkIns ? checkIns + (checkIns === 1 ? ' small step logged' : ' small steps logged') : 'Progress at your own pace'}</small>
+          {useSample ? (
+            <>
+              <div><span>Example rhythm</span><strong>{area.progress}%</strong></div>
+              <div className="area-dialog-progress-track"><span style={{ width: area.progress + '%' }} /></div>
+              <small>Illustrative sample value</small>
+            </>
+          ) : (
+            <>
+              <div><span>Check-ins logged</span><strong>{checkIns}</strong></div>
+              <small>{checkIns ? checkIns + (checkIns === 1 ? ' small step logged' : ' small steps logged') : 'Log a check-in when you want to record a small step.'}</small>
+            </>
+          )}
         </div>
 
         <div className="area-next-step">
@@ -95,6 +109,8 @@ export default function AreaDetailModal({
           <span className="area-next-copy"><strong>A gentle next step</strong><span>{nextSteps[area.slug]}</span></span>
         </div>
 
+        {signedIn ? (
+          <>
         <form className="intention-form" onSubmit={save}>
           <label htmlFor="area-intention">What would feel good to focus on?</label>
           <div className="intention-field">
@@ -116,12 +132,11 @@ export default function AreaDetailModal({
           </button>
           <span className="area-time-note"><Clock3 size={13} /> No perfect days required</span>
         </div>
-        {message && <p className="area-dialog-message" role="status">{message}</p>}
-        {!signedIn && (
-          <button type="button" className="sync-nudge" onClick={onOpenSignUp}>
-            <LockKeyhole size={13} /> Sign in to keep your updates on every device <ArrowRight size={13} />
-          </button>
+          </>
+        ) : (
+          <div className="area-signin-gate"><LockKeyhole size={16} /><p>Your intentions and check-ins stay in your private workspace.</p><button type="button" onClick={onOpenSignUp}>Open your workspace <ArrowRight size={14} /></button></div>
         )}
+        {message && <p className="area-dialog-message" role="status">{message}</p>}
       </section>
     </div>
   );
