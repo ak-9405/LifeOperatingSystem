@@ -10,9 +10,50 @@ export function createAccountRouter(pool, requireAuth) {
   });
   router.use(requireAuth);
 
+  router.get('/onboarding', async (request, response) => {
+    try {
+      const result = await pool.query(
+        'SELECT onboarding_completed, focus_areas, focus_intention FROM users WHERE id = $1',
+        [request.user.id],
+      );
+      const row = result.rows[0];
+      return response.json({
+        completed: Boolean(row?.onboarding_completed),
+        focusAreas: row?.focus_areas || [],
+        focusIntention: row?.focus_intention || '',
+      });
+    } catch (error) {
+      console.error('Could not load onboarding preferences:', error.message);
+      return response.status(503).json({ error: 'Your starting preferences could not be loaded.' });
+    }
+  });
+
+  router.put('/onboarding', async (request, response) => {
+    const focusAreas = request.body?.focusAreas;
+    const focusIntention = typeof request.body?.focusIntention === 'string' ? request.body.focusIntention.trim() : '';
+    const validAreas = new Set(['money', 'health', 'learning', 'goals', 'reading', 'habits', 'career', 'business', 'relationships']);
+    if (!Array.isArray(focusAreas) || focusAreas.length > 3 ||
+      focusAreas.some((slug) => typeof slug !== 'string' || !validAreas.has(slug)) ||
+      new Set(focusAreas).size !== focusAreas.length || focusIntention.length > 240) {
+      return response.status(400).json({ error: 'Choose up to three areas and keep your intention under 240 characters.' });
+    }
+    try {
+      const result = await pool.query(
+        'UPDATE users SET onboarding_completed = TRUE, focus_areas = $2, focus_intention = $3 WHERE id = $1 ' +
+          'RETURNING onboarding_completed, focus_areas, focus_intention',
+        [request.user.id, focusAreas, focusIntention],
+      );
+      const row = result.rows[0];
+      return response.json({ completed: Boolean(row?.onboarding_completed), focusAreas: row?.focus_areas || [], focusIntention: row?.focus_intention || '' });
+    } catch (error) {
+      console.error('Could not save onboarding preferences:', error.message);
+      return response.status(503).json({ error: 'Your starting preferences could not be saved.' });
+    }
+  });
+
   router.get('/export', async (request, response) => {
     try {
-      const [areaResult, taskResult, activityResult, journalActivityResult, journalResult, contactResult, healthMetricsResult, healthGoalsResult, billingResult] = await Promise.all([
+      const [areaResult, taskResult, activityResult, journalActivityResult, journalResult, contactResult, healthMetricsResult, healthGoalsResult, billingResult, onboardingResult] = await Promise.all([
         pool.query(
           'SELECT area_slug, intention, check_ins, updated_at FROM life_area_updates WHERE user_id = $1 ORDER BY area_slug',
           [request.user.id],
@@ -52,6 +93,10 @@ export function createAccountRouter(pool, requireAuth) {
           'SELECT status, current_period_end, cancel_at_period_end FROM lifeos_subscriptions WHERE user_id = $1',
           [request.user.id],
         ),
+        pool.query(
+          'SELECT onboarding_completed, focus_areas, focus_intention FROM users WHERE id = $1',
+          [request.user.id],
+        ),
       ]);
 
       return response.json({
@@ -86,6 +131,11 @@ export function createAccountRouter(pool, requireAuth) {
           status: billingResult.rows[0].status,
           currentPeriodEnd: billingResult.rows[0].current_period_end,
           cancelAtPeriodEnd: billingResult.rows[0].cancel_at_period_end,
+        } : null,
+        onboarding: onboardingResult.rows[0] ? {
+          completed: Boolean(onboardingResult.rows[0].onboarding_completed),
+          focusAreas: onboardingResult.rows[0].focus_areas || [],
+          focusIntention: onboardingResult.rows[0].focus_intention || '',
         } : null,
         contactNotes: contactResult.rows.map((row) => ({
           id: row.id,

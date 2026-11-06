@@ -1,11 +1,12 @@
 import { CalendarDays, Clock3, LockKeyhole, Plus, Sparkles } from 'lucide-react';
 import LifeBalancePanel from '../components/LifeBalancePanel.jsx';
 import DailyJournalBox from '../components/DailyJournalBox.jsx';
+import WeeklyReset from '../components/WeeklyReset.jsx';
 import TaskRow from '../components/TaskRow.jsx';
 import { areas } from '../data/workspace.js';
 import { downloadTaskReminder } from '../lib/tasks.js';
 
-export default function DayPage({currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask, onOpenAccount}) {
+export default function DayPage({currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask, isPlus, focusPreferences, onOpenAccount}) {
  return <div className="route-page day-page"><section className="welcome" id="today">
             <div className="welcome-copy">
               <span className="eyebrow welcome-eyebrow"><CalendarDays size={13} /> {date}</span>
@@ -79,6 +80,7 @@ export default function DayPage({currentUser, date, greetingPrefix, totalCheckIn
               </div>
             </article>
             <DailyJournalBox signedIn={Boolean(currentUser)} today={today} onOpenAccount={onOpenAccount} />
+            {currentUser && <WeeklyReset currentUser={currentUser} isPlus={isPlus} focusPreferences={focusPreferences} />}
             </div>
             <LifeBalancePanel language={language} authenticated={Boolean(currentUser)} today={today} refreshKey={activityRefreshKey} />
           </section>

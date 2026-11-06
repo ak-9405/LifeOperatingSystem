@@ -8,7 +8,7 @@ import { createTaskRouter, ensureTaskSchema } from './tasks.js';
 import { createHealthRouter, ensureHealthSchema } from './health.js';
 import { createQuoteRouter, ensureQuoteSchema } from './quotes.js';
 import { createBillingRouter, createRequirePlus, ensureBillingSchema, handleStripeWebhook } from './billing.js';
-import { createInsightsRouter } from './insights.js';
+import { createInsightsRouter, ensureInsightsSchema } from './insights.js';
 
 const { Pool } = pg;
 const app = express();
@@ -135,6 +135,7 @@ async function startServer() {
   await ensureHealthSchema(pool);
   await ensureQuoteSchema(pool);
   await ensureBillingSchema(pool);
+  await ensureInsightsSchema(pool);
   app.listen(port, '0.0.0.0', () => {
     console.log('Life OS API listening on http://localhost:' + port);
   });

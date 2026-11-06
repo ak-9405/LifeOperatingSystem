@@ -7,6 +7,7 @@ import { areas, navigation } from './data/workspace.js';
 import { localDateString, makeTaskId } from './lib/tasks.js';
 import usePageTranslator from './hooks/usePageTranslator.js';
 import useDirectionalFocusNavigation from './hooks/useDirectionalFocusNavigation.js';
+import OnboardingDialog from './components/OnboardingDialog.jsx';
 import DayPage from './pages/DayPage.jsx';
 import ProgressPage from './pages/ProgressPage.jsx';
 import LifeAreasPage from './pages/LifeAreasPage.jsx';
@@ -18,6 +19,7 @@ import AccountPage from './pages/AccountPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import PhilosophyPage from './pages/PhilosophyPage.jsx';
 import PlusPage from './pages/PlusPage.jsx';
+import NotebookPage from './pages/NotebookPage.jsx';
 
 const languageOptions = [
   { code: 'en', label: 'English' },
@@ -53,6 +55,8 @@ function App() {
   const [authPending, setAuthPending] = useState(false);
   const [authError, setAuthError] = useState('');
   const [areaEntries, setAreaEntries] = useState({});
+  const [onboarding, setOnboarding] = useState(null);
+  const [showAdminOnboarding, setShowAdminOnboarding] = useState(false);
   const [subscription, setSubscription] = useState({ isPlus: false, demo: false, status: 'free', checkoutEnabled: false, loading: true });
   const [activityRefreshKey, setActivityRefreshKey] = useState(0);
   const [now] = useState(() => new Date());
@@ -93,6 +97,27 @@ function App() {
   useEffect(() => {
     refreshSubscription();
   }, [refreshSubscription]);
+
+  useEffect(() => {
+    if (!authReady || !currentUser?.id) {
+      setOnboarding(null);
+      setShowAdminOnboarding(false);
+      return undefined;
+    }
+    const controller = new AbortController();
+    fetch('/api/account/onboarding', { signal: controller.signal })
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Your starting preferences could not be loaded.');
+        setOnboarding(result);
+        const isAdmin = currentUser.name?.trim().toLowerCase() === 'admin';
+        let previewSeen = false;
+        try { previewSeen = sessionStorage.getItem('lifeos.admin-onboarding-preview-seen') === 'true'; } catch {}
+        setShowAdminOnboarding(isAdmin && !previewSeen);
+      })
+      .catch((error) => { if (error.name !== 'AbortError') setNotice(error.message); });
+    return () => controller.abort();
+  }, [authReady, currentUser?.id, currentUser?.name]);
 
   const date = new Intl.DateTimeFormat('en-GB', {
     weekday: 'long', day: 'numeric', month: 'long',
@@ -402,7 +427,7 @@ function App() {
 
 
   const activeArea = routeLocation.pathname.startsWith('/life-areas/') ? areas.find((area) => area.slug === routeLocation.pathname.split('/')[2]) : null;
-  const pageTitle = activeArea?.title || navigation.find((item) => item.href === routeLocation.pathname)?.label || ({ '/plus': 'Life OS Plus', '/about': 'How it works', '/privacy': 'Data and privacy', '/account': 'Your account', '/signin': 'Sign in', '/register': 'Get started' })[routeLocation.pathname] || 'Page not found';
+  const pageTitle = activeArea?.title || navigation.find((item) => item.href === routeLocation.pathname)?.label || ({ '/plus': 'Life OS Plus', '/notebook': 'Notebook', '/about': 'How it works', '/privacy': 'Data and privacy', '/account': 'Your account', '/signin': 'Sign in', '/register': 'Get started' })[routeLocation.pathname] || 'Page not found';
   useEffect(() => {
     document.title = pageTitle + ' · Life OS';
     window.scrollTo(0, 0);
@@ -444,10 +469,11 @@ function App() {
       <div className="page-content">
         <div className="route-outlet" ref={routeFocus} tabIndex={-1} aria-label={pageTitle}>
           <Routes>
-            <Route path="/" element={<DayPage {...{currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask}} onOpenAccount={() => openAuth('login')} />} />
+            <Route path="/" element={<DayPage {...{currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask}} isPlus={subscription.isPlus} focusPreferences={onboarding} onOpenAccount={() => openAuth('login')} />} />
             <Route path="/progress" element={<ProgressPage currentUser={currentUser} tasks={tasks} areaEntries={areaEntries} isPlus={subscription.isPlus} />} />
             <Route path="/life-areas" element={<LifeAreasPage currentUser={currentUser} areaEntries={areaEntries} />} />
             <Route path="/life-areas/:slug" element={<AreaPage currentUser={currentUser} areaEntries={areaEntries} isPlus={subscription.isPlus} onSignIn={() => openAuth('login')} />} />
+            <Route path="/notebook" element={<NotebookPage currentUser={currentUser} onSignIn={() => openAuth('login')} />} />
             <Route path="/prompts" element={<Navigate to="/life-areas" replace />} />
             <Route path="/philosophy" element={<PhilosophyPage currentUser={currentUser} isPlus={subscription.isPlus} />} />
             <Route path="/plus" element={<PlusPage currentUser={currentUser} subscription={subscription} onRefreshStatus={refreshSubscription} />} />
@@ -464,6 +490,17 @@ function App() {
         <WorkspaceFooter />
       </div>
     </main>
+    {currentUser && onboarding && (!onboarding.completed || showAdminOnboarding) && <OnboardingDialog
+      initial={onboarding}
+      demoPreview={showAdminOnboarding}
+      onComplete={(result) => {
+        setOnboarding(result);
+        setShowAdminOnboarding(false);
+        if (showAdminOnboarding) {
+          try { sessionStorage.setItem('lifeos.admin-onboarding-preview-seen', 'true'); } catch {}
+        }
+      }}
+    />}
     {isTranslating && <div className="translation-indicator"><Globe2 size={14} /> Translating your page…</div>}
     {notice && <div className="toast-notice" role="status"><span>{notice}</span><button type="button" aria-label="Dismiss" onClick={() => setNotice('')}>×</button></div>}
   </div>;

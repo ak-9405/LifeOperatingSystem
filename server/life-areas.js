@@ -91,6 +91,30 @@ export function createLifeAreaRouter(pool, requireAuth) {
     }
   });
 
+  router.get('/journal', async (request, response) => {
+    const query = typeof request.query.q === 'string' ? request.query.q.trim() : '';
+    const area = typeof request.query.area === 'string' ? request.query.area : '';
+    if (query.length > 120 || (area && !validAreas.has(area))) {
+      return response.status(400).json({ error: 'Use a shorter search or choose a valid life area.' });
+    }
+    try {
+      const result = await pool.query(
+        "SELECT entry_id, area_slug, TO_CHAR(entry_date, 'YYYY-MM-DD') AS date, body, created_at, updated_at " +
+          'FROM life_area_journal_entries WHERE user_id = $1 ' +
+          "AND ($2 = '' OR body ILIKE '%' || $2 || '%') AND ($3 = '' OR area_slug = $3) " +
+          'ORDER BY updated_at DESC, entry_id DESC LIMIT 200',
+        [request.user.id, query, area],
+      );
+      return response.json({ entries: result.rows.map((row) => ({
+        id: String(row.entry_id), areaSlug: row.area_slug, date: row.date,
+        text: row.body, createdAt: row.created_at, updatedAt: row.updated_at,
+      })) });
+    } catch (error) {
+      console.error('Could not search life area journals:', error.message);
+      return response.status(503).json({ error: 'Your notes could not be searched right now.' });
+    }
+  });
+
   router.get('/', async (request, response) => {
     try {
       const result = await pool.query(

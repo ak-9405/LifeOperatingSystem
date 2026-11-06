@@ -57,6 +57,11 @@ export async function ensureAuthSchema(pool) {
     ");",
   );
   await pool.query(
+    "ALTER TABLE users ADD COLUMN IF NOT EXISTS onboarding_completed BOOLEAN NOT NULL DEFAULT TRUE;" +
+    "ALTER TABLE users ADD COLUMN IF NOT EXISTS focus_areas TEXT[] NOT NULL DEFAULT '{}';" +
+    "ALTER TABLE users ADD COLUMN IF NOT EXISTS focus_intention VARCHAR(240) NOT NULL DEFAULT '';"
+  );
+  await pool.query(
     "CREATE TABLE IF NOT EXISTS life_area_check_ins (" +
       "id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, " +
       "user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, " +
@@ -217,7 +222,7 @@ export function createAuthRouter(pool) {
           : email.split('@')[0].slice(0, 100);
         try {
           userResult = await pool.query(
-            'INSERT INTO users (name, email, password_hash, google_sub) VALUES ($1, $2, $3, $4) RETURNING id, name, email',
+            'INSERT INTO users (name, email, password_hash, google_sub, onboarding_completed) VALUES ($1, $2, $3, $4, FALSE) RETURNING id, name, email',
             [name, email, passwordHash, profile.sub],
           );
           newAccount = true;
@@ -256,7 +261,7 @@ export function createAuthRouter(pool) {
     try {
       const passwordHash = await hashPassword(password);
       const result = await pool.query(
-        'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email',
+        'INSERT INTO users (name, email, password_hash, onboarding_completed) VALUES ($1, $2, $3, FALSE) RETURNING id, name, email',
         [name, email, passwordHash],
       );
 
