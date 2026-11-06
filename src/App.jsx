@@ -440,7 +440,7 @@ function App() {
       <div className="page-content">
         <div className="route-outlet" ref={routeFocus} tabIndex={-1} aria-label={pageTitle}>
           <Routes>
-            <Route path="/" element={<DayPage {...{currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask}} onCheckIn={handleCheckIn} />} />
+            <Route path="/" element={<DayPage {...{currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask}} onCheckIn={handleCheckIn} onOpenAccount={() => openAuth('login')} />} />
             <Route path="/progress" element={<ProgressPage currentUser={currentUser} tasks={tasks} areaEntries={areaEntries} />} />
             <Route path="/life-areas" element={<LifeAreasPage currentUser={currentUser} areaEntries={areaEntries} />} />
             <Route path="/life-areas/:slug" element={<AreaPage currentUser={currentUser} areaEntries={areaEntries} onCheckIn={handleCheckIn} onSaveIntention={handleSaveIntention} onSignIn={() => openAuth('login')} />} />

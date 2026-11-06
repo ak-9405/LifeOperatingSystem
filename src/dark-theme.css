@@ -47,10 +47,11 @@
   .contact-auth-gate, .task-auth-gate, .reflection-locked,
   .account-data-actions, .account-delete-confirm,
   .area-journal, .area-journal-editor, .area-journal-note-card,
+  .quick-note-dialog, .quick-note-locked,
   .wellness-progress, .wellness-connection, .wellness-provider-list,
   .wellness-week-summary > span, .wellness-metric-card,
   .wellness-edit-form, .wellness-locked, .activity-event-card,
-  .workspace-quick-links a, .progress-summary-card, .area-progress-panel,
+  .workspace-quick-links a, .workspace-quick-links button.quick-note-link, .progress-summary-card, .area-progress-panel,
   .area-progress-list > a, .quote-card, .quote-source,
   .quote-locked, .quote-loading, .quote-error, .signed-out-activity-cta,
   .translation-indicator, .toast-notice {
@@ -121,6 +122,16 @@
     border-color: #3b4c40;
   }
   input::placeholder, textarea::placeholder, .area-journal-editor textarea::placeholder { color: #839387; }
+  .quick-note-icon { color: #b6d0b4; background: #2d4231; }
+  .quick-note-form > label:not(.sr-only), .quick-note-footer { color: #a2b1a5; }
+  .quick-note-form select, .quick-note-form textarea { color: #dce5de; background: #18241d; border-color: #3b4c40; }
+  .quick-note-form textarea::placeholder { color: #839387; }
+  .quick-note-footer small { color: #91a094; }
+  .quick-note-cancel { color: #bdc9bf; background: transparent; border-color: #405246; }
+  .quick-note-cancel:hover { background: #293a2e; }
+  .quick-note-locked { color: #b3c0b5; background: #19261e; }
+  .quick-note-link strong { color: #dce7dd; }
+  .quick-note-link small { color: #a2b0a4; }
   select option, .language-option { color: #dbe5dc; background: #1b2821; }
   .language-option:hover, .language-option-active { color: #e4efe4; background: #2a3b2e; }
   .language-menu-caption { color: #9eada1; border-color: #35453b; }

@@ -15,10 +15,12 @@ html { scroll-behavior: auto; }
 .route-back-link { margin-bottom: 24px; }
 .workspace-quick-links { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin-top: 21px; }
 .workspace-quick-links a { display: flex; align-items: center; gap: 11px; min-width: 0; padding: 16px; border: 1px solid #e5ebe0; border-radius: 12px; background: #fff; transition: border-color .2s, box-shadow .2s; }
+.workspace-quick-links button.quick-note-link { display: flex; align-items: center; gap: 11px; min-width: 0; padding: 16px; border: 1px solid #e5ebe0; border-radius: 12px; color: inherit; background: #fff; text-align: left; font: inherit; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
 .workspace-quick-links a:hover { border-color: #b5cdb2; box-shadow: 0 6px 18px #31543b0b; }
-.workspace-quick-links a > svg:first-child { color: #709375; }
-.workspace-quick-links a > svg:last-child { margin-left: auto; color: #9baa9a; }
-.workspace-quick-links a span { display: grid; gap: 4px; min-width: 0; }
+.workspace-quick-links button.quick-note-link:hover { border-color: #b5cdb2; box-shadow: 0 6px 18px #31543b0b; }
+.workspace-quick-links a > svg:first-child, .workspace-quick-links button.quick-note-link > svg:first-child { color: #709375; }
+.workspace-quick-links a > svg:last-child, .workspace-quick-links button.quick-note-link > svg:last-child { margin-left: auto; color: #9baa9a; }
+.workspace-quick-links a span, .workspace-quick-links button.quick-note-link span { display: grid; gap: 4px; min-width: 0; }
 .workspace-quick-links strong { color: #48634f; font-size: 13px; }
 .workspace-quick-links small { color: #96a096; font-size: 11px; }
 .progress-summary-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 13px; }

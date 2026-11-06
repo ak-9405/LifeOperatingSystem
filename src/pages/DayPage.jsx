@@ -2,14 +2,16 @@ import { ArrowRight, BookOpenCheck, CalendarDays, CircleCheck, Clock3, Flower2, 
 import { useState } from 'react';
 import { Link } from 'react-router';
 import LifeBalancePanel from '../components/LifeBalancePanel.jsx';
+import QuickNoteModal from '../components/QuickNoteModal.jsx';
 import TaskRow from '../components/TaskRow.jsx';
 import { areas } from '../data/workspace.js';
 import { downloadTaskReminder } from '../lib/tasks.js';
 
-export default function DayPage({currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask, onCheckIn}) {
+export default function DayPage({currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask, onCheckIn, onOpenAccount}) {
   const [checkInArea, setCheckInArea] = useState('');
   const [checkInPending, setCheckInPending] = useState(false);
   const [checkInMessage, setCheckInMessage] = useState('');
+  const [quickNoteOpen, setQuickNoteOpen] = useState(false);
 
   async function saveQuickCheckIn(event) {
     event.preventDefault();
@@ -111,5 +113,5 @@ export default function DayPage({currentUser, date, greetingPrefix, totalCheckIn
             </article>
 
             <LifeBalancePanel language={language} authenticated={Boolean(currentUser)} today={today} refreshKey={activityRefreshKey} />
-          </section><div className="workspace-quick-links"><Link to="/progress"><TrendingUp size={20} /><span><strong>Your progress</strong><small>Goals, steps and sleep</small></span><ArrowRight size={15} /></Link><Link to="/life-areas"><Flower2 size={20} /><span><strong>Life areas</strong><small>Set an intention or check in</small></span><ArrowRight size={15} /></Link><Link to="/life-areas"><BookOpenCheck size={20} /><span><strong>Write what’s on your mind</strong><small>Open a life-area journal and write freely</small></span><ArrowRight size={15} /></Link></div></div>;
+          </section><div className="workspace-quick-links"><Link to="/progress"><TrendingUp size={20} /><span><strong>Your progress</strong><small>Goals, steps and sleep</small></span><ArrowRight size={15} /></Link><Link to="/life-areas"><Flower2 size={20} /><span><strong>Life areas</strong><small>Set an intention or check in</small></span><ArrowRight size={15} /></Link><button type="button" className="quick-note-link" onClick={() => setQuickNoteOpen(true)}><BookOpenCheck size={20} /><span><strong>Write what’s on your mind</strong><small>Open a page and write freely</small></span><ArrowRight size={15} /></button></div>{quickNoteOpen && <QuickNoteModal signedIn={Boolean(currentUser)} onClose={() => setQuickNoteOpen(false)} onOpenAccount={() => { setQuickNoteOpen(false); onOpenAccount(); }} />}</div>;
 }
