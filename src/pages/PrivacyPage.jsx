@@ -15,7 +15,11 @@ export default function PrivacyPage(){return <div className="route-page"><sectio
               </article>
               <article>
                 <h3>Activity calendar</h3>
-                <p>The calendar marks a day when you write in a life area, log a check-in or finish a task. Journal activity follows your local date. Older check-in totals were saved without dates, so they are not assigned to calendar days.</p>
+                <p>Saving a life-area note automatically records a dated check-in for that area. The calendar also includes independent check-ins and finished tasks. Older check-in totals were saved without dates, so they are not assigned to calendar days.</p>
+              </article>
+              <article>
+                <h3>Plus billing</h3>
+                <p>Optional Life OS Plus subscriptions are processed by Stripe. Life OS stores the Stripe customer reference and subscription status to unlock Plus features; card details are handled by Stripe Checkout and are not stored in the Life OS database.</p>
               </article>
             </div>
           </section></div>;}

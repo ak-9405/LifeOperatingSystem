@@ -14,6 +14,7 @@ const AUTH_WINDOW_MS = 15 * 60 * 1000;
 const AUTH_WINDOW_LIMIT = 20;
 const authAttempts = new Map();
 const DEMO_EMAIL = 'admin@lifeos.local';
+const DEMO_PASSWORD = process.env.LIFEOS_DEMO_PASSWORD || '1234';
 const localDemoEnabled = process.env.LIFEOS_LOCAL_DEMO === 'true' && process.env.NODE_ENV !== 'production';
 const cookieSecure = process.env.COOKIE_SECURE === 'true';
 const cookieName = cookieSecure ? '__Host-lifeos.sid' : 'lifeos.sid';
@@ -88,6 +89,14 @@ export async function ensureAuthSchema(pool) {
     "INSERT INTO life_area_journal_activity (user_id, activity_date) " +
       "SELECT DISTINCT user_id, entry_date FROM life_area_journal_entries ON CONFLICT DO NOTHING"
   );
+}
+
+export async function ensureLocalDemoPassword(pool) {
+  if (!localDemoEnabled) return;
+  const result = await pool.query('SELECT id FROM users WHERE LOWER(email) = $1', [DEMO_EMAIL]);
+  if (!result.rowCount) return;
+  const passwordHash = await hashPassword(DEMO_PASSWORD);
+  await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [passwordHash, result.rows[0].id]);
 }
 
 export function createAuthRouter(pool) {
@@ -495,7 +504,7 @@ function isLocalBrowserRequest(request) {
 async function getOrCreateDemoUser(pool) {
   const existing = await pool.query('SELECT id, name, email FROM users WHERE LOWER(email) = $1', [DEMO_EMAIL]);
   if (existing.rowCount) return existing.rows[0];
-  const passwordHash = await hashPassword(randomBytes(32).toString('base64url'));
+  const passwordHash = await hashPassword(DEMO_PASSWORD);
   const created = await pool.query(
     'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING RETURNING id, name, email',
     ['Admin', DEMO_EMAIL, passwordHash],

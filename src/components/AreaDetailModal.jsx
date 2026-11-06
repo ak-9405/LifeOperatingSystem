@@ -1,14 +1,5 @@
-import {
-  ArrowRight,
-  Check,
-  ChevronDown,
-  CircleCheck,
-  Clock3,
-  LockKeyhole,
-  Sparkles,
-  X,
-} from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { ChevronDown, Sparkles, X } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import AreaJournal from './AreaJournal.jsx';
 
 const nextSteps = {
@@ -28,25 +19,16 @@ export default function AreaDetailModal({
   presentation = 'modal',
   saved = {},
   signedIn,
-  demo,
+  isPlus,
   onClose,
-  onCheckIn,
-  onSaveIntention,
   onOpenSignUp,
 }) {
-  const [intention, setIntention] = useState(saved.intention || '');
-  const [message, setMessage] = useState('');
-  const [busy, setBusy] = useState(false);
   const dialogRef = useRef(null);
   const Icon = area.icon;
   const checkIns = Number(saved.checkIns || 0);
   const useSample = !signedIn && !checkIns && !saved.intention;
   const displayValue = useSample ? area.value : checkIns ? checkIns + (checkIns === 1 ? ' check-in' : ' check-ins') : saved.intention ? 'Intention set' : 'No activity yet';
   const displayDetail = useSample ? area.detail : saved.intention || (checkIns ? 'Your saved check-ins in this area.' : 'Nothing has been logged in this area yet.');
-
-  useEffect(() => {
-    setIntention(saved.intention || '');
-  }, [area.slug, saved.intention]);
 
   useEffect(() => {
     if (presentation === 'page') return undefined;
@@ -57,21 +39,6 @@ export default function AreaDetailModal({
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [onClose, presentation]);
-
-  async function save(event) {
-    event.preventDefault();
-    setBusy(true);
-    const succeeded = await onSaveIntention(area.slug, intention);
-    setBusy(false);
-    setMessage(succeeded ? 'Your intention is saved.' : 'That intention could not be saved. Please try again.');
-  }
-
-  async function checkIn() {
-    setBusy(true);
-    const succeeded = await onCheckIn(area.slug);
-    setBusy(false);
-    setMessage(succeeded ? 'A small step counts. Check-in saved.' : 'Your check-in could not be saved. Please try again.');
-  }
 
   return (
     <div className={presentation === 'page' ? 'area-page-panel' : 'modal-scrim'} onMouseDown={(event) => presentation !== 'page' && event.target === event.currentTarget && onClose()}>
@@ -90,7 +57,7 @@ export default function AreaDetailModal({
           <div className="area-dialog-value">{displayValue}</div>
         </div>
 
-        <AreaJournal area={area} signedIn={signedIn} onOpenAccount={onOpenSignUp} />
+        <AreaJournal area={area} signedIn={signedIn} isPlus={isPlus} onOpenAccount={onOpenSignUp} />
 
         <div className="area-dialog-progress">
           {useSample ? (
@@ -102,7 +69,7 @@ export default function AreaDetailModal({
           ) : (
             <>
               <div><span>Check-ins logged</span><strong>{checkIns}</strong></div>
-              <small>{checkIns ? checkIns + (checkIns === 1 ? ' small step logged' : ' small steps logged') : 'Log a check-in when you want to record a small step.'}</small>
+              <small>{checkIns ? checkIns + (checkIns === 1 ? ' small step logged' : ' small steps logged') : 'Saving a journal note records your first check-in here.'}</small>
             </>
           )}
         </div>
@@ -112,34 +79,6 @@ export default function AreaDetailModal({
           <span className="area-next-copy"><strong>A gentle next step</strong><span>{nextSteps[area.slug]}</span></span>
         </div>
 
-        {signedIn ? (
-          <>
-        <form className="intention-form" onSubmit={save}>
-          <label htmlFor="area-intention">What would feel good to focus on?</label>
-          <div className="intention-field">
-            <input
-              id="area-intention"
-              maxLength={240}
-              value={intention}
-              onChange={(event) => setIntention(event.target.value)}
-              placeholder="Set a small intention for this area"
-            />
-            <button type="submit" disabled={busy} aria-label="Save intention"><Check size={16} /></button>
-          </div>
-          <small>{intention.length}/240 characters</small>
-        </form>
-
-        <div className="area-dialog-actions">
-          <button className="button button-dark area-checkin-button" type="button" onClick={checkIn} disabled={busy}>
-            <CircleCheck size={16} /> Log a check-in
-          </button>
-          <span className="area-time-note"><Clock3 size={13} /> No perfect days required</span>
-        </div>
-          </>
-        ) : (
-          <div className="area-signin-gate"><LockKeyhole size={16} /><p>Your intentions, notes and check-ins stay in your workspace.</p><button type="button" onClick={onOpenSignUp}>Open your workspace <ArrowRight size={14} /></button></div>
-        )}
-        {message && <p className="area-dialog-message" role="status">{message}</p>}
       </section>
     </div>
   );

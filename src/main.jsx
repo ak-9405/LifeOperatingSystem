@@ -6,6 +6,7 @@ import './styles.css';
 import './interactions.css';
 import './pages/WorkspacePages.css';
 import './dark-theme.css';
+import './device-adaptations.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

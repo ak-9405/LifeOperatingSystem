@@ -96,7 +96,7 @@
   width: 100%;
   border: 1px solid #ebede7;
   color: #3c5145;
-  font-family: "DM Sans", "Segoe UI", sans-serif;
+  font-family: var(--sans);
   font-weight: 400;
   text-align: left;
   cursor: pointer;
@@ -279,6 +279,7 @@
   .step-card,
   .brief-card,
   .activity-calendar,
+  .daily-journal-box,
   .contact-form,
   .contact-auth-gate,
   .coach-conversation {
@@ -379,6 +380,19 @@
   .activity-day:not(:disabled) { transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
   .activity-day:hover:not(:disabled) { box-shadow: 0 0 0 3px rgba(101,148,105,.16); }
 
+  .daily-journal-box:hover,
+  .daily-journal-box:focus-within {
+    transform: translateY(-4px);
+    border-color: #8cad8a;
+    box-shadow: 0 17px 38px rgba(8,18,12,.24), 0 0 0 1px rgba(145,185,139,.2);
+  }
+  .daily-journal-icon { transition: transform .32s cubic-bezier(.2,.75,.25,1), box-shadow .32s ease; }
+  .daily-journal-box:hover .daily-journal-icon,
+  .daily-journal-box:focus-within .daily-journal-icon {
+    transform: rotate(-6deg) scale(1.08);
+    box-shadow: 0 0 0 5px rgba(120,164,119,.12);
+  }
+
   .contact-form:hover,
   .contact-form:focus-within,
   .contact-auth-gate:hover,
@@ -429,6 +443,8 @@
   .activity-calendar,
   .activity-calendar::before,
   .activity-day,
+  .daily-journal-box,
+  .daily-journal-icon,
   .contact-form,
   .contact-auth-gate,
   .coach-conversation,

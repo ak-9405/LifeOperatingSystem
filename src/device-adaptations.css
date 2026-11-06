@@ -1,0 +1,50 @@
+/* Viewport-aware behavior for tablets, touch devices, and television browsers. */
+.app-shell { min-height: 100vh; min-height: 100svh; min-height: 100dvh; }
+
+/* Keep the day planner and activity calendar readable on portrait tablets. */
+@media (min-width: 761px) and (max-width: 900px) {
+  .day-page .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
+  .day-page .day-left-stack { gap: 12px; }
+  .day-page .daily-journal-box { width: 100%; }
+  .day-page .activity-calendar { width: 100%; }
+}
+
+/* Give touch and remote users generous, well-spaced controls. */
+@media (pointer: coarse), (hover: none) {
+  .nav-link { min-height: 48px; }
+  .mobile-menu-button { width: 44px; height: 44px; }
+  .mobile-nav a, .mobile-nav button { min-height: 44px; display: flex; align-items: center; }
+  .sidebar-toggle { min-height: 44px; }
+  .language-trigger, .topbar-account { min-height: 44px; }
+  .activity-month-controls button { width: 44px; height: 44px; }
+  .brief-task { min-height: 52px; }
+  .task-add-primary input, .task-add-primary button { min-height: 44px; }
+  .daily-journal-new, .daily-journal-save { min-height: 42px; padding-right: 12px; padding-left: 12px; }
+  .activity-day { min-width: 30px; min-height: 30px; }
+}
+
+/* Increase legibility and spacing on large screens often viewed from farther away. */
+@media (min-width: 1600px) {
+  .page-content { width: min(100%, 1580px); }
+  .dashboard-grid { gap: 22px; }
+  .brief-card { padding: 32px 34px 19px; }
+  .brief-intro, .welcome-subtitle, .activity-intro { font-size: 16px; }
+  .task-title-text, .area-card h3, .nav-link { font-size: 16px; }
+  .activity-day { font-size: 15px; }
+  .daily-journal-box textarea { min-height: 130px; font-size: 14px; }
+}
+
+/* TV and keyboard navigation depend on a clear, persistent focus position. */
+@media (min-width: 1200px) and (hover: none) {
+  button:focus-visible, a:focus-visible, select:focus-visible,
+  input:focus-visible, textarea:focus-visible, summary:focus-visible {
+    outline: 4px solid #e5efb6;
+    outline-offset: 4px;
+    box-shadow: 0 0 0 2px #1d3024;
+  }
+  .brief-task:focus-visible .task-arrow { opacity: 1; transform: translate(2px, 2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .day-page .dashboard-grid, .day-page .day-left-stack { scroll-behavior: auto; }
+}

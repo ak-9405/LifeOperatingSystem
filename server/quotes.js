@@ -21,10 +21,24 @@ export async function ensureQuoteSchema(pool) {
   );
 }
 
-export function createQuoteRouter(pool, requireAuth) {
+export function createQuoteRouter(pool, requireAuth, requirePlus) {
   const router = express.Router();
   router.use(requireAuth);
-  router.get('/', async (_request, response) => {
+  router.get('/daily', async (_request, response) => {
+    response.setHeader('Cache-Control', 'no-store');
+    try {
+      const dayIndex = Math.floor(Date.now() / 86400000) % seedQuotes.length;
+      const result = await pool.query(
+        'SELECT id, quote_text AS text, author, work, translator, source_url AS "sourceUrl" FROM philosophy_quotes ORDER BY display_order, id LIMIT 1 OFFSET $1',
+        [dayIndex],
+      );
+      return response.json({ quote: result.rows[0] || null });
+    } catch (error) {
+      console.error('Could not load the daily motivation card:', error.message);
+      return response.status(503).json({ error: 'Today’s motivation card could not be loaded. Please try again.' });
+    }
+  });
+  router.get('/', requirePlus, async (_request, response) => {
     response.setHeader('Cache-Control', 'no-store');
     try {
       const result = await pool.query('SELECT id, quote_text AS text, author, work, translator, source_url AS "sourceUrl" FROM philosophy_quotes ORDER BY display_order, id');

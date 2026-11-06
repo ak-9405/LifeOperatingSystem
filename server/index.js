@@ -1,12 +1,14 @@
 import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
-import { createAuthRouter, createRequireAuth, ensureAuthSchema } from './auth.js';
+import { createAuthRouter, createRequireAuth, ensureAuthSchema, ensureLocalDemoPassword } from './auth.js';
 import { createAccountRouter } from './account.js';
 import { createLifeAreaRouter } from './life-areas.js';
 import { createTaskRouter, ensureTaskSchema } from './tasks.js';
 import { createHealthRouter, ensureHealthSchema } from './health.js';
 import { createQuoteRouter, ensureQuoteSchema } from './quotes.js';
+import { createBillingRouter, createRequirePlus, ensureBillingSchema, handleStripeWebhook } from './billing.js';
+import { createInsightsRouter } from './insights.js';
 
 const { Pool } = pg;
 const app = express();
@@ -22,14 +24,18 @@ const pool = new Pool({
 });
 
 app.disable('x-powered-by');
+app.post('/api/billing/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook(pool));
 app.use(express.json({ limit: '64kb' }));
 
 const requireAuth = createRequireAuth(pool);
+const requirePlus = createRequirePlus(pool);
 app.use('/api/auth', createAuthRouter(pool));
 app.use('/api/account', createAccountRouter(pool, requireAuth));
 app.use('/api/life-areas', createLifeAreaRouter(pool, requireAuth));
+app.use('/api/billing', createBillingRouter(pool, requireAuth));
+app.use('/api/insights', createInsightsRouter(pool, requireAuth, requirePlus));
 app.use('/api/tasks', createTaskRouter(pool, requireAuth));
-app.use('/api/quotes', createQuoteRouter(pool, requireAuth));
+app.use('/api/quotes', createQuoteRouter(pool, requireAuth, requirePlus));
 app.get('/api/health', async (_request, response) => {
   try {
     await pool.query('SELECT 1');
@@ -124,9 +130,11 @@ app.post('/api/translate', async (request, response) => {
 
 async function startServer() {
   await ensureAuthSchema(pool);
+  await ensureLocalDemoPassword(pool);
   await ensureTaskSchema(pool);
   await ensureHealthSchema(pool);
   await ensureQuoteSchema(pool);
+  await ensureBillingSchema(pool);
   app.listen(port, '0.0.0.0', () => {
     console.log('Life OS API listening on http://localhost:' + port);
   });

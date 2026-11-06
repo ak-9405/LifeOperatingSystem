@@ -1,5 +1,6 @@
 import express from 'express';
 import { clearSessionCookie } from './auth.js';
+import { cancelStripeSubscriptionForAccountDeletion } from './billing.js';
 
 export function createAccountRouter(pool, requireAuth) {
   const router = express.Router();
@@ -11,7 +12,7 @@ export function createAccountRouter(pool, requireAuth) {
 
   router.get('/export', async (request, response) => {
     try {
-      const [areaResult, taskResult, activityResult, journalActivityResult, journalResult, contactResult, healthMetricsResult, healthGoalsResult] = await Promise.all([
+      const [areaResult, taskResult, activityResult, journalActivityResult, journalResult, contactResult, healthMetricsResult, healthGoalsResult, billingResult] = await Promise.all([
         pool.query(
           'SELECT area_slug, intention, check_ins, updated_at FROM life_area_updates WHERE user_id = $1 ORDER BY area_slug',
           [request.user.id],
@@ -47,6 +48,10 @@ export function createAccountRouter(pool, requireAuth) {
           'SELECT metric_key, target_value, updated_at FROM health_goals WHERE user_id = $1 ORDER BY metric_key',
           [request.user.id],
         ),
+        pool.query(
+          'SELECT status, current_period_end, cancel_at_period_end FROM lifeos_subscriptions WHERE user_id = $1',
+          [request.user.id],
+        ),
       ]);
 
       return response.json({
@@ -77,6 +82,11 @@ export function createAccountRouter(pool, requireAuth) {
         lifeAreaJournal: journalResult.rows.map((row) => ({ id: String(row.entry_id), areaSlug: row.area_slug, date: row.date, text: row.body, updatedAt: row.updated_at })),
         healthMetrics: healthMetricsResult.rows.map((row) => ({ date: row.date, steps: row.steps === null ? null : Number(row.steps), sleepMinutes: row.sleep_minutes === null ? null : Number(row.sleep_minutes), restingPulse: row.resting_pulse === null ? null : Number(row.resting_pulse), source: row.source, updatedAt: row.updated_at })),
         healthGoals: healthGoalsResult.rows.map((row) => ({ metric: row.metric_key, target: Number(row.target_value), updatedAt: row.updated_at })),
+        subscription: billingResult.rows[0] ? {
+          status: billingResult.rows[0].status,
+          currentPeriodEnd: billingResult.rows[0].current_period_end,
+          cancelAtPeriodEnd: billingResult.rows[0].cancel_at_period_end,
+        } : null,
         contactNotes: contactResult.rows.map((row) => ({
           id: row.id,
           name: row.name,
@@ -94,6 +104,12 @@ export function createAccountRouter(pool, requireAuth) {
 
   router.delete('/', async (request, response) => {
     if (request.user.demo) return response.status(403).json({ error: 'The local demo account cannot be deleted. Sign out to test another account.' });
+    try {
+      await cancelStripeSubscriptionForAccountDeletion(pool, request.user.id);
+    } catch (error) {
+      console.error('Could not cancel billing before account deletion:', error.message);
+      return response.status(503).json({ error: 'Your subscription could not be cancelled, so your account has been kept. Manage the subscription first, then try again.' });
+    }
     const client = await pool.connect();
     try {
       await client.query('BEGIN');

@@ -1,5 +1,5 @@
 :root {
-  font-family: "DM Sans", "Segoe UI", sans-serif;
+  font-family: var(--sans);
   color: #22372f;
   background: #e8eee8;
   font-synthesis: none;
@@ -9,7 +9,8 @@
   --line: #e8eae3;
   --canvas: #f6f7f2;
   --paper: #fff;
-  --serif: "DM Serif Display", Georgia, serif;
+  --sans: "Atkinson Hyperlegible", "Segoe UI", sans-serif;
+  --serif: "Atkinson Hyperlegible", "Segoe UI", sans-serif;
 }
 * { box-sizing: border-box; }
 html { min-width: 320px; scroll-behavior: smooth; scroll-padding-top: 26px; }
@@ -21,6 +22,10 @@ button { color: inherit; }
 button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #83b798; outline-offset: 3px; }
 ::selection { background: #d6e8d6; color: #1d4036; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* Give headings a little more breathing room with the clearer, open letterforms. */
+h1, h2, h3, h4 { line-height: 1.18; letter-spacing: -.025em; }
+.welcome h1 { line-height: 1.02; letter-spacing: -.035em; }
 
 .app-shell { position: relative; isolation: isolate; min-height: 100vh; background: transparent; }
 .sidebar { position: fixed; z-index: 30; inset: 0 auto 0 0; width: 244px; display: flex; flex-direction: column; padding: 29px 19px 17px; background: rgba(250,251,247,.84); border-right: 1px solid rgba(235,237,231,.86); backdrop-filter: blur(17px) saturate(1.1); -webkit-backdrop-filter: blur(17px) saturate(1.1); }
@@ -66,7 +71,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .eyebrow { display: inline-flex; align-items: center; gap: 7px; color: #8e9b90; font-size: 14px; font-weight: 700; letter-spacing: 1.45px; }
 .welcome-eyebrow { color: #829486; letter-spacing: 1.2px; }
 .welcome-eyebrow svg { color: #93a393; }
-.welcome h1 { margin: 10px 0 8px; color: #243b31; font-family: var(--serif); font-size: clamp(45px, 5vw, 60px); font-weight: 400; letter-spacing: -1.8px; line-height: .92; }
+.welcome h1 { margin: 10px 0 8px; color: #243b31; font-family: var(--serif); font-size: clamp(45px, 5vw, 60px); font-weight: 400; letter-spacing: -.035em; line-height: 1.02; }
 .welcome h1 em, .section-heading h2 em, .how-heading h2 em, .coach-copy h2 em, .contact-copy h2 em { color: #73977d; font-weight: 400; }
 .welcome-subtitle { margin: 13px 0 0; color: #929b95; font-size: 14px; }
 .week-streak { display: grid; grid-template-columns: 32px 1fr auto; align-items: center; column-gap: 9px; row-gap: 10px; width: min(375px, 47%); min-height: 73px; padding: 13px 15px; border: 1px solid #eaede5; border-radius: 12px; background: rgba(255,255,255,.68); }
@@ -427,14 +432,6 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .demo-banner button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 9px; border: 0; border-radius: 7px; color: #fff; background: #315746; font-size: 13px; font-weight: 600; cursor: pointer; }
 .demo-tag { display: inline-block; margin-right: 5px; padding: 2px 5px; border-radius: 4px; color: #57745a; background: #edf3e9; font-size: 10px; letter-spacing: .4px; }
 .week-streak-summary { cursor: default; }
-.home-checkin { grid-column: 1 / -1; width: 100%; margin-top: 2px; padding-top: 8px; border-top: 1px solid #edf0e9; }
-.home-checkin summary { width: fit-content; color: #46664e; font-size: 12px; font-weight: 700; cursor: pointer; }
-.home-checkin form { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 7px; margin-top: 9px; }
-.home-checkin label { grid-column: 1 / -1; color: #718172; font-size: 11px; }
-.home-checkin select { min-width: 0; height: 36px; padding: 0 8px; border: 1px solid #dfe7dc; border-radius: 6px; color: #405448; background: #fff; font-size: 13px; }
-.home-checkin form button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 0 10px; border: 1px solid #b8d0b8; border-radius: 6px; color: #264b3c; background: #d8e7d5; font-size: 12px; font-weight: 700; cursor: pointer; }
-.home-checkin form button:disabled { opacity: .58; cursor: not-allowed; }
-.home-checkin-status { grid-column: 1 / -1; color: #527254; font-size: 11px; }
 .day-demo-note { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; margin: 0 0 16px; padding: 10px 13px; border: 1px solid #d9e5d5; border-radius: 9px; color: #3e5b47; background: #eef4eb; }
 .day-demo-note > span { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 750; letter-spacing: .04em; white-space: nowrap; }
 .day-demo-note p { margin: 0; color: #657a67; font-size: 12px; line-height: 1.45; }

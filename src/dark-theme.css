@@ -40,19 +40,19 @@
 
   .week-streak, .pulse-card, .area-card, .step-card, .contact-section,
   .contact-form, .privacy-section, .day-demo-note, .demo-banner,
-  .home-checkin, .task-add-form, .task-add-fields, .task-edit-form,
+  .task-add-form, .task-add-fields, .task-edit-form,
   .task-reminder-control, .page-panel, .language-menu,
   .area-dialog, .auth-dialog, .account-dialog, .account-card,
   .area-next-step, .area-dialog-progress, .area-signin-gate,
   .contact-auth-gate, .task-auth-gate, .reflection-locked,
+  .quote-plus-teaser, .area-journal-guide-options,
   .account-data-actions, .account-delete-confirm,
   .area-journal, .area-journal-editor, .area-journal-note-card,
-  .quick-note-dialog, .quick-note-locked,
   .wellness-progress, .wellness-connection, .wellness-provider-list,
   .wellness-week-summary > span, .wellness-metric-card,
   .wellness-edit-form, .wellness-locked, .activity-event-card,
-  .workspace-quick-links a, .workspace-quick-links button.quick-note-link, .progress-summary-card, .area-progress-panel,
-  .area-progress-list > a, .quote-card, .quote-source,
+  .progress-summary-card, .area-progress-panel,
+  .area-progress-list > a, .quote-card, .quote-source, .quote-plus-teaser, .area-journal-guide-options,
   .quote-locked, .quote-loading, .quote-error, .signed-out-activity-cta,
   .translation-indicator, .toast-notice {
     color: #dce5de;
@@ -66,10 +66,16 @@
   .brief-card, .coach-section { background-color: #20392d; }
   .contact-section { background: rgba(27,39,32,.91); }
   .quote-card { background: radial-gradient(ellipse at 100% 0%, #293a2a 0, transparent 53%), #202a22; }
+  .quote-plus-teaser, .area-journal-guide-options { background-color: #202a22; border-color: #394b3d; }
+  .quote-plus-teaser strong, .quote-plus-teaser > a { color: #c7ddc5; }
+  .quote-plus-teaser small, .area-journal-guide-options button { color: #aabaaa; }
+  .area-journal-guide-trigger, .area-journal-guide-upsell { color: #bfd1bf; background: #25362a; border-color: #3d5441; }
+  .area-journal-guide-trigger > span, .area-journal-guide-upsell > span { color: #b5cdb4; }
+  .area-journal-guide-options button:hover { background: #304532; }
   .quote-source, .quote-locked, .quote-loading, .quote-error { background-color: #202a22; }
   .page-content, .route-page { color: #dce5de; }
 
-  .area-card, .area-title, .step-card h3, .workspace-quick-links strong,
+  .area-card, .area-title, .step-card h3,
   .progress-summary-card strong, .panel-heading h2, .area-progress-list strong,
   .area-progress-list b, .area-dialog-title-row h2, .area-dialog-value,
   .area-next-copy strong, .area-journal-heading h2, .area-journal-date-title h3,
@@ -81,7 +87,7 @@
   .area-detail, .area-card .area-title, .step-card p, .how-heading > p,
   .steps-caption, .welcome-subtitle, .streak-copy strong, .streak-copy small,
   .pulse-description, .pulse-note, .contact-copy > p, .contact-assurance small,
-  .contact-contact-line, .field-wrap, .workspace-quick-links small,
+  .contact-contact-line, .field-wrap,
   .progress-summary-card > span, .progress-summary-card small,
   .area-progress-list small, .quote-content figcaption > span:last-child,
   .quote-card-hint, .quote-source strong, .quote-source small,
@@ -95,7 +101,7 @@
   .text-link, .route-text-link, .route-back-link, .quote-shuffle,
   .quote-source a, .contact-assurance-icon, .wellness-status { color: #a6c9a8; }
 
-  .area-card:hover, .workspace-quick-links a:hover, .area-progress-list > a:hover,
+  .area-card:hover, .area-progress-list > a:hover,
   .area-journal-note-card:hover:not(:disabled), .quote-control-button:hover {
     background-color: #29382e;
     border-color: #536b57;
@@ -114,7 +120,7 @@
   .intention-field input, .auth-field > input, .password-input-wrap,
   .password-input-wrap input, .area-journal-editor textarea,
   .field-wrap input, .field-wrap textarea, .field-wrap select,
-  .home-checkin select, .task-add-primary input, .task-add-fields input,
+  .task-add-primary input, .task-add-fields input,
   .task-add-fields select, .task-edit-form input, .task-edit-form select,
   .task-reminder-control input, .wellness-edit-form input {
     color: #e0e9e1;
@@ -122,16 +128,6 @@
     border-color: #3b4c40;
   }
   input::placeholder, textarea::placeholder, .area-journal-editor textarea::placeholder { color: #839387; }
-  .quick-note-icon { color: #b6d0b4; background: #2d4231; }
-  .quick-note-form > label:not(.sr-only), .quick-note-footer { color: #a2b1a5; }
-  .quick-note-form select, .quick-note-form textarea { color: #dce5de; background: #18241d; border-color: #3b4c40; }
-  .quick-note-form textarea::placeholder { color: #839387; }
-  .quick-note-footer small { color: #91a094; }
-  .quick-note-cancel { color: #bdc9bf; background: transparent; border-color: #405246; }
-  .quick-note-cancel:hover { background: #293a2e; }
-  .quick-note-locked { color: #b3c0b5; background: #19261e; }
-  .quick-note-link strong { color: #dce7dd; }
-  .quick-note-link small { color: #a2b0a4; }
   select option, .language-option { color: #dbe5dc; background: #1b2821; }
   .language-option:hover, .language-option-active { color: #e4efe4; background: #2a3b2e; }
   .language-menu-caption { color: #9eada1; border-color: #35453b; }

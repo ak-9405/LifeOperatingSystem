@@ -75,7 +75,9 @@ export function createLifeAreaRouter(pool, requireAuth) {
             'FROM life_tasks WHERE user_id = $1 AND completed = TRUE AND completed_on >= $2 AND completed_on < $3 ' +
           'UNION ALL ' +
           "SELECT activity_date AS activity_day, ''::text AS area_slug, 'journal'::text AS kind " +
-            'FROM life_area_journal_activity WHERE user_id = $1 AND activity_date >= $2 AND activity_date < $3' +
+            'FROM life_area_journal_activity journal_activity WHERE user_id = $1 AND activity_date >= $2 AND activity_date < $3 ' +
+            'AND NOT EXISTS (SELECT 1 FROM life_area_check_ins check_in WHERE check_in.user_id = journal_activity.user_id ' +
+              'AND check_in.activity_date = journal_activity.activity_date)' +
         ') SELECT TO_CHAR(activity_day, \'YYYY-MM-DD\') AS date, kind, area_slug, COUNT(*)::integer AS count ' +
           'FROM activity GROUP BY activity_day, kind, area_slug ORDER BY activity_day, kind, area_slug',
         [request.user.id, start, end],
@@ -143,10 +145,7 @@ export function createLifeAreaRouter(pool, requireAuth) {
           "RETURNING entry_id, TO_CHAR(entry_date, 'YYYY-MM-DD') AS date, body, created_at, updated_at",
         [request.user.id, slug, date, text],
       );
-      await client.query(
-        'INSERT INTO life_area_journal_activity (user_id, activity_date) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-        [request.user.id, activityDate],
-      );
+      await recordJournalCheckIn(client, request.user.id, slug, activityDate);
       await client.query('COMMIT');
       const row = result.rows[0];
       return response.status(201).json({ entry: { id: String(row.entry_id), date: row.date, text: row.body, createdAt: row.created_at, updatedAt: row.updated_at } });
@@ -185,10 +184,7 @@ export function createLifeAreaRouter(pool, requireAuth) {
           await client.query('ROLLBACK');
           return response.status(404).json({ error: 'That note could not be found.' });
         }
-        await client.query(
-          'INSERT INTO life_area_journal_activity (user_id, activity_date) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-          [request.user.id, activityDate],
-        );
+        await recordJournalCheckIn(client, request.user.id, slug, activityDate);
         await client.query('COMMIT');
         const row = result.rows[0];
         return response.json({ entry: { id: String(row.entry_id), date: row.date, text: row.body, createdAt: row.created_at, updatedAt: row.updated_at } });
@@ -281,6 +277,19 @@ function isDateString(value) {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const parsed = new Date(value + 'T00:00:00Z');
   return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
+
+async function recordJournalCheckIn(client, userId, slug, activityDate) {
+  await client.query(
+    'INSERT INTO life_area_updates (user_id, area_slug, check_ins) VALUES ($1, $2, 1) ' +
+      'ON CONFLICT (user_id, area_slug) DO UPDATE ' +
+      'SET check_ins = life_area_updates.check_ins + 1, updated_at = NOW()',
+    [userId, slug],
+  );
+  await client.query(
+    'INSERT INTO life_area_check_ins (user_id, area_slug, activity_date) VALUES ($1, $2, $3)',
+    [userId, slug, activityDate],
+  );
 }
 
 function toPublicArea(row) {

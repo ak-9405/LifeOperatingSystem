@@ -1,10 +1,11 @@
-import { BarChart3, BookOpenCheck, BriefcaseBusiness, CircleDollarSign, Compass, Flower2, HeartHandshake, HeartPulse, LibraryBig, MessageSquare, Quote, Target, TrendingUp, WalletCards, Zap } from 'lucide-react';
+import { BarChart3, BookOpenCheck, BriefcaseBusiness, CircleDollarSign, Compass, Flower2, HeartHandshake, HeartPulse, LibraryBig, MessageSquare, Quote, Sparkles, Target, TrendingUp, WalletCards, Zap } from 'lucide-react';
 
 export const navigation = [
 {href:'/',label:'Your day',icon:Compass},
 {href:'/progress',label:'Progress',icon:TrendingUp},
 {href:'/life-areas',label:'Life areas',icon:Flower2},
 {href:'/philosophy',label:'Philosophy',icon:Quote},
+{href:'/plus',label:'Life OS Plus',icon:Sparkles},
 {href:'/contact',label:'Contact us',icon:MessageSquare},
 ];
 export const areas = [

@@ -1,0 +1,61 @@
+.daily-journal-box { position: relative; width: min(100%, 820px); min-width: 0; margin: 0; padding: 16px; color: #dce7de; background: linear-gradient(145deg, rgba(29,48,36,.97), rgba(24,39,30,.97)); border: 1px solid rgba(155,184,157,.24); border-radius: 15px; box-shadow: 0 9px 24px rgba(8,18,12,.17); }
+.daily-journal-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+.daily-journal-icon { display: grid; flex: 0 0 auto; place-items: center; width: 32px; height: 32px; color: #b9d6b8; background: #2a4130; border: 1px solid #466149; border-radius: 9px; }
+.daily-journal-heading > div { display: grid; gap: 2px; min-width: 0; }
+.daily-journal-eyebrow { color: #9db79f; font-size: 8px; font-weight: 700; letter-spacing: .13em; }
+.daily-journal-heading h2 { margin: 0; color: #e0e9e1; font: 400 19px/1.2 var(--serif, Georgia, serif); }
+.daily-journal-heading p { margin: 0; color: #a9b9ac; font-size: 10px; line-height: 1.4; }
+.daily-journal-date-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 6px; color: #a7c3a8; font-size: 8px; font-weight: 700; letter-spacing: .1em; }
+.daily-journal-date-row small { display: inline-flex; align-items: center; gap: 4px; color: #acbcb0; font-size: 10px; font-weight: 500; letter-spacing: 0; }
+.daily-journal-date-row small.is-saved { color: #b9d8b6; }
+.daily-journal-box textarea { display: block; width: 100%; min-height: 100px; padding: 11px 12px; resize: vertical; color: #e1eae2; background: #17251c; border: 1px solid #405444; border-radius: 10px; font-family: inherit; font-size: 12px; line-height: 1.65; transition: border-color .15s, box-shadow .15s; }
+.daily-journal-box textarea::placeholder { color: #819487; }
+.daily-journal-box textarea:focus { outline: 0; border-color: #8cad8a; box-shadow: 0 0 0 3px rgba(132,174,132,.13); }
+.daily-journal-box textarea:disabled { opacity: .6; }
+.daily-journal-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; color: #91a295; font-size: 9px; }
+.daily-journal-footer span { display: inline-flex; align-items: center; gap: 5px; }
+.daily-journal-footer small { color: #91a295; font-size: inherit; }
+.daily-journal-message { margin: 7px 0 0; color: #b9d8b6; font-size: 10px; }
+.daily-journal-save-picker { margin-top: 10px; padding: 10px; background: #17251c; border: 1px solid #405444; border-radius: 9px; }
+.daily-journal-save-picker > div:first-child { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.daily-journal-save-picker strong { color: #dce7de; font-size: 11px; }
+.daily-journal-save-picker > div:first-child button { display: grid; place-items: center; width: 26px; height: 26px; color: #aebfb0; background: transparent; border: 0; border-radius: 6px; cursor: pointer; }
+.daily-journal-save-picker > div:first-child button:hover { color: #e1ece2; background: #293b2e; }
+.daily-journal-area-options { display: flex; flex-wrap: wrap; gap: 6px; }
+.daily-journal-area-options button { min-height: 29px; padding: 0 9px; color: #bfd0c1; background: #213329; border: 1px solid #3d5542; border-radius: 7px; font: inherit; font-size: 10px; cursor: pointer; }
+.daily-journal-area-options button:hover:not(:disabled) { color: #e1ece2; background: #304734; border-color: #678568; }
+.daily-journal-area-options button:disabled { opacity: .55; cursor: progress; }
+.daily-journal-save-picker > small { display: block; margin-top: 8px; color: #a9c7a8; font-size: 10px; }
+.daily-journal-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 9px; padding-top: 9px; border-top: 1px solid #35463a; color: #91a295; font-size: 9px; }
+.daily-journal-actions > div { display: flex; align-items: center; gap: 7px; }
+.daily-journal-new, .daily-journal-save { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 30px; padding: 0 9px; border-radius: 7px; font-size: 10px; font-weight: 650; cursor: pointer; }
+.daily-journal-delete { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 30px; padding: 0 8px; color: #bb9c92; background: transparent; border: 1px solid #594943; border-radius: 7px; font-size: 10px; font-weight: 600; cursor: pointer; }
+.daily-journal-delete:hover:not(:disabled) { color: #e4c4b9; background: #392b27; }
+.daily-journal-delete:disabled { opacity: .48; cursor: not-allowed; }
+.daily-journal-new { color: #bdd0bf; background: transparent; border: 1px solid #435447; }
+.daily-journal-new:hover:not(:disabled) { background: #293a2e; }
+.daily-journal-save { color: #1d3524; background: #c3d9be; border: 1px solid #c3d9be; }
+.daily-journal-save:hover:not(:disabled) { background: #d2e4ce; border-color: #d2e4ce; }
+.daily-journal-save:disabled, .daily-journal-new:disabled { opacity: .48; cursor: not-allowed; }
+.daily-journal-delete-confirm { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 8px; padding: 9px; color: #dfc2b9; background: #2b211f; border: 1px solid #59433d; border-radius: 8px; font-size: 10px; }
+.daily-journal-delete-confirm button { min-height: 29px; padding: 4px 8px; color: #e8d6d1; background: #3a2b27; border: 1px solid #654b42; border-radius: 6px; font-size: 10px; cursor: pointer; }
+.daily-journal-delete-confirm button:first-of-type { color: #fff; background: #754f42; border-color: #754f42; }
+.daily-journal-delete-confirm button:disabled { opacity: .5; cursor: wait; }
+.daily-journal-history { margin-top: 8px; border-top: 1px solid #35463a; }
+.daily-journal-history summary { display: flex; align-items: center; gap: 6px; width: fit-content; padding: 8px 0 2px; color: #b9ccb9; font-size: 9px; cursor: pointer; }
+.daily-journal-history summary span { display: grid; place-items: center; min-width: 17px; height: 17px; padding: 0 4px; color: #dce9dc; background: #314333; border-radius: 10px; font-size: 9px; }
+.daily-journal-history > div { display: grid; gap: 6px; margin-top: 7px; }
+.daily-journal-history > div > button { display: grid; gap: 3px; min-width: 0; padding: 8px 9px; color: #dce7de; background: #1a2a20; border: 1px solid #34483a; border-radius: 8px; text-align: left; cursor: pointer; }
+.daily-journal-history > div > button:hover:not(:disabled) { background: #223429; border-color: #546d56; }
+.daily-journal-history time { color: #a9c7a8; font-size: 9px; font-weight: 700; }
+.daily-journal-history > div > button span { overflow: hidden; color: #c4d2c6; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.daily-journal-history > div > button:disabled { opacity: .6; }
+.daily-journal-locked { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; padding: 10px; color: #bbc9bd; background: #1a2a20; border: 1px solid #35483a; border-radius: 9px; font-size: 10px; }
+.daily-journal-locked button { margin-left: auto; padding: 7px 9px; color: #1d3524; background: #c3d9be; border: 0; border-radius: 7px; font-size: 10px; font-weight: 650; cursor: pointer; }
+@media (max-width: 590px) {
+  .daily-journal-box { padding: 13px; }
+  .daily-journal-heading h2 { font-size: 18px; }
+  .daily-journal-box textarea { min-height: 90px; }
+  .daily-journal-actions { align-items: flex-start; flex-direction: column; }
+  .daily-journal-actions > div { align-self: flex-end; }
+}

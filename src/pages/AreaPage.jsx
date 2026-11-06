@@ -4,13 +4,13 @@ import AreaDetailModal from '../components/AreaDetailModal.jsx';
 import { areas } from '../data/workspace.js';
 import NotFoundPage from './NotFoundPage.jsx';
 
-export default function AreaPage({ currentUser, areaEntries, onCheckIn, onSaveIntention, onSignIn }) {
+export default function AreaPage({ currentUser, areaEntries, isPlus, onSignIn }) {
   const { slug } = useParams();
   const area = areas.find((item) => item.slug === slug);
   if (!area) return <NotFoundPage />;
   return <div className="route-page area-detail-page">
     <Link className="route-back-link" to="/life-areas"><ArrowLeft size={15} /> All life areas</Link>
-    <AreaDetailModal key={area.slug} area={area} saved={areaEntries[area.slug]} signedIn={Boolean(currentUser)} presentation="page" onCheckIn={onCheckIn} onSaveIntention={onSaveIntention} onOpenSignUp={onSignIn} />
+    <AreaDetailModal key={area.slug} area={area} saved={areaEntries[area.slug]} signedIn={Boolean(currentUser)} isPlus={isPlus} presentation="page" onOpenSignUp={onSignIn} />
     <Link className="route-text-link area-progress-link" to={slug === 'health' ? '/progress' : '/'}>{slug === 'health' ? 'Steps, sleep and health goals' : 'Plan a task for this area'} <ArrowRight size={14} /></Link>
   </div>;
 }

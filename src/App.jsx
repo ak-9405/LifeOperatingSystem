@@ -6,6 +6,7 @@ import NatureBackdrop from './components/NatureBackdrop.jsx';
 import { areas, navigation } from './data/workspace.js';
 import { localDateString, makeTaskId } from './lib/tasks.js';
 import usePageTranslator from './hooks/usePageTranslator.js';
+import useDirectionalFocusNavigation from './hooks/useDirectionalFocusNavigation.js';
 import DayPage from './pages/DayPage.jsx';
 import ProgressPage from './pages/ProgressPage.jsx';
 import LifeAreasPage from './pages/LifeAreasPage.jsx';
@@ -16,6 +17,7 @@ import PrivacyPage from './pages/PrivacyPage.jsx';
 import AccountPage from './pages/AccountPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import PhilosophyPage from './pages/PhilosophyPage.jsx';
+import PlusPage from './pages/PlusPage.jsx';
 
 const languageOptions = [
   { code: 'en', label: 'English' },
@@ -30,6 +32,7 @@ const languageOptions = [
 ];
 
 function App() {
+  useDirectionalFocusNavigation();
   const navigate = useNavigate();
   const routeLocation = useLocation();
   const authMode = routeLocation.pathname === '/register' ? 'signup' : 'login';
@@ -50,6 +53,7 @@ function App() {
   const [authPending, setAuthPending] = useState(false);
   const [authError, setAuthError] = useState('');
   const [areaEntries, setAreaEntries] = useState({});
+  const [subscription, setSubscription] = useState({ isPlus: false, demo: false, status: 'free', checkoutEnabled: false, loading: true });
   const [activityRefreshKey, setActivityRefreshKey] = useState(0);
   const [now] = useState(() => new Date());
   const translator = usePageTranslator(setNotice, setIsTranslating);
@@ -69,12 +73,31 @@ function App() {
     return () => media.removeEventListener('change', update);
   }, []);
 
+  const refreshSubscription = useCallback(async () => {
+    if (!currentUser?.id) {
+      setSubscription({ isPlus: false, demo: false, status: 'free', checkoutEnabled: false, loading: false });
+      return null;
+    }
+    try {
+      const response = await fetch('/api/billing/status');
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Your plan could not be loaded.');
+      setSubscription({ ...result, loading: false });
+      return result;
+    } catch {
+      setSubscription((current) => ({ ...current, loading: false }));
+      return null;
+    }
+  }, [currentUser?.id]);
+
+  useEffect(() => {
+    refreshSubscription();
+  }, [refreshSubscription]);
+
   const date = new Intl.DateTimeFormat('en-GB', {
     weekday: 'long', day: 'numeric', month: 'long',
   }).format(now);
-  const greeting = new Intl.DateTimeFormat('en-GB', { hour: 'numeric' }).format(now);
-  const hour = Number(greeting.split(' ')[0].split(':')[0]);
-  const greetingPrefix = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const greetingPrefix = 'Hello';
   const today = localDateString(now);
   const displayedTasks = [...tasks].sort((a, b) => a.taskDate.localeCompare(b.taskDate));
   const doneCount = displayedTasks.filter((task) => task.completed).length;
@@ -145,6 +168,26 @@ function App() {
       })
       .catch((error) => { if (error.name !== 'AbortError' && active) setNotice(error.message); });
     return () => { active = false; controller.abort(); };
+  }, [currentUser?.id]);
+
+  useEffect(() => {
+    if (!currentUser?.id) return undefined;
+    let active = true;
+    async function refreshLifeAreas() {
+      try {
+        const response = await fetch('/api/life-areas');
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Life areas could not be refreshed.');
+        if (active) setAreaEntries(Object.fromEntries((result.areas || []).map((area) => [area.slug, area])));
+      } catch (error) {
+        if (active) setNotice(error.message);
+      }
+    }
+    window.addEventListener('lifeos:journal-saved', refreshLifeAreas);
+    return () => {
+      active = false;
+      window.removeEventListener('lifeos:journal-saved', refreshLifeAreas);
+    };
   }, [currentUser?.id]);
 
   useEffect(() => {
@@ -263,45 +306,6 @@ function App() {
 
 
 
-  async function handleCheckIn(slug) {
-    if (!currentUser) { openAuth('login'); return false; }
-
-    try {
-      const response = await fetch('/api/life-areas/' + encodeURIComponent(slug) + '/check-ins', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ occurredOn: today }),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Your check-in could not be saved.');
-      setAreaEntries((current) => ({ ...current, [slug]: result.area }));
-      setActivityRefreshKey((value) => value + 1);
-      return true;
-    } catch (error) {
-      setNotice(error.message);
-      return false;
-    }
-  }
-
-  async function handleSaveIntention(slug, intention) {
-    if (!currentUser) { openAuth('login'); return false; }
-
-    try {
-      const response = await fetch('/api/life-areas/' + encodeURIComponent(slug), {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ intention }),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Your intention could not be saved.');
-      setAreaEntries((current) => ({ ...current, [slug]: result.area }));
-      return true;
-    } catch (error) {
-      setNotice(error.message);
-      return false;
-    }
-  }
-
   async function persistTask(task, method = 'PUT') {
     if (!currentUser) { openAuth('login'); return false; }
 
@@ -398,7 +402,7 @@ function App() {
 
 
   const activeArea = routeLocation.pathname.startsWith('/life-areas/') ? areas.find((area) => area.slug === routeLocation.pathname.split('/')[2]) : null;
-  const pageTitle = activeArea?.title || navigation.find((item) => item.href === routeLocation.pathname)?.label || ({ '/about': 'How it works', '/privacy': 'Data and privacy', '/account': 'Your account', '/signin': 'Sign in', '/register': 'Get started' })[routeLocation.pathname] || 'Page not found';
+  const pageTitle = activeArea?.title || navigation.find((item) => item.href === routeLocation.pathname)?.label || ({ '/plus': 'Life OS Plus', '/about': 'How it works', '/privacy': 'Data and privacy', '/account': 'Your account', '/signin': 'Sign in', '/register': 'Get started' })[routeLocation.pathname] || 'Page not found';
   useEffect(() => {
     document.title = pageTitle + ' · Life OS';
     window.scrollTo(0, 0);
@@ -440,12 +444,13 @@ function App() {
       <div className="page-content">
         <div className="route-outlet" ref={routeFocus} tabIndex={-1} aria-label={pageTitle}>
           <Routes>
-            <Route path="/" element={<DayPage {...{currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask}} onCheckIn={handleCheckIn} onOpenAccount={() => openAuth('login')} />} />
-            <Route path="/progress" element={<ProgressPage currentUser={currentUser} tasks={tasks} areaEntries={areaEntries} />} />
+            <Route path="/" element={<DayPage {...{currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask}} onOpenAccount={() => openAuth('login')} />} />
+            <Route path="/progress" element={<ProgressPage currentUser={currentUser} tasks={tasks} areaEntries={areaEntries} isPlus={subscription.isPlus} />} />
             <Route path="/life-areas" element={<LifeAreasPage currentUser={currentUser} areaEntries={areaEntries} />} />
-            <Route path="/life-areas/:slug" element={<AreaPage currentUser={currentUser} areaEntries={areaEntries} onCheckIn={handleCheckIn} onSaveIntention={handleSaveIntention} onSignIn={() => openAuth('login')} />} />
+            <Route path="/life-areas/:slug" element={<AreaPage currentUser={currentUser} areaEntries={areaEntries} isPlus={subscription.isPlus} onSignIn={() => openAuth('login')} />} />
             <Route path="/prompts" element={<Navigate to="/life-areas" replace />} />
-            <Route path="/philosophy" element={<PhilosophyPage currentUser={currentUser} />} />
+            <Route path="/philosophy" element={<PhilosophyPage currentUser={currentUser} isPlus={subscription.isPlus} />} />
+            <Route path="/plus" element={<PlusPage currentUser={currentUser} subscription={subscription} onRefreshStatus={refreshSubscription} />} />
             <Route path="/contact" element={<ContactPage currentUser={currentUser} contactStatus={contactStatus} handleContactSubmit={handleContactSubmit} contactForm={contactForm} />} />
             <Route path="/notes" element={<Navigate to="/contact" replace />} />
             <Route path="/about" element={<AboutPage />} />

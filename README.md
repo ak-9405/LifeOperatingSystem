@@ -43,7 +43,13 @@ To send the warm greeting after account creation and sign-in, also configure a w
     SMTP_URL=smtps://username:password@smtp.example.com:465
     EMAIL_FROM=Life OS <hello@example.com>
 
-Without SMTP configured, sign-in still succeeds and the app displays that greeting email delivery is not configured. The local Admin demo account never receives email.
+Without SMTP configured, sign-in still succeeds and the app displays that greeting email delivery is not configured. The local Admin demo account never receives email. For local demonstrations, use `admin@lifeos.local` with password `1234`; keep `LIFEOS_LOCAL_DEMO` disabled in production.
+
+## Life OS Plus billing
+
+The local Admin demo account has Plus features unlocked for preview. Real accounts require Stripe billing configuration before checkout is available. Create recurring Stripe prices of £3.99/month and £29.99/year, then add their Price IDs and the Stripe secret key to `.env` using the `STRIPE_*` settings in `.env.example`. Configure a Stripe webhook pointing to `/api/billing/webhook` and subscribe it to `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid`, and `invoice.payment_failed`. Use the webhook signing secret for `STRIPE_WEBHOOK_SECRET`.
+
+Stripe Checkout hosts the payment form; Life OS stores the Stripe customer and subscription references and subscription status, not card details. Keep the journaling, life areas, activity calendar, and basic progress available on the free plan. The complete motivation card bank, guided journal templates, and personal activity reflections are Plus features.
 
 ## Workspace pages and philosophy library
 

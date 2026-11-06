@@ -49,6 +49,10 @@ services:
       APP_BASE_URL: ${APP_BASE_URL:-http://localhost:5173}
       SMTP_URL: ${SMTP_URL:-}
       EMAIL_FROM: "${EMAIL_FROM:-Life OS <no-reply@example.com>}"
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      STRIPE_PRICE_MONTHLY_ID: ${STRIPE_PRICE_MONTHLY_ID:-}
+      STRIPE_PRICE_YEARLY_ID: ${STRIPE_PRICE_YEARLY_ID:-}
     depends_on:
       database:
         condition: service_healthy

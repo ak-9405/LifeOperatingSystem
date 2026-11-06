@@ -15,7 +15,7 @@ export default function AreaCard({ area, entry, demo }) {
         : 'No activity yet';
   const detail = useSample
     ? area.detail
-    : entry?.intention || (checkIns ? 'Saved check-ins in this area.' : 'Log a check-in or set an intention.');
+    : entry?.intention || (checkIns ? 'Saved notes and check-ins in this area.' : 'Write and save a note to log a check-in.');
   const change = useSample
     ? area.change
     : checkIns
