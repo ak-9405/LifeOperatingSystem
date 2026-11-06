@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently -k -n web,api -c cyan,green \"vite --host 0.0.0.0\" \"node --watch server/index.js\"",
-    "dev:web": "vite --host 0.0.0.0",
+    "dev": "concurrently -k -n web,api -c cyan,green \"vite --configLoader runner --host 0.0.0.0\" \"node --watch server/index.js\"",
+    "dev:web": "vite --configLoader runner --host 0.0.0.0",
     "server": "node server/index.js",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0"

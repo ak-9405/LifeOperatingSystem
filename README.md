@@ -12,7 +12,9 @@ The first startup downloads the free LibreTranslate image and language models. D
 
 PostgreSQL stores contact form submissions. The API runs on port 4000; PostgreSQL uses port 5432 inside Docker and host port 5433.
 
-Create an account from the header to save area intentions and check-ins to your own profile. Passwords are stored as scrypt hashes, and sign-in sessions use HTTP-only cookies. Set COOKIE_SECURE=true when serving the API over HTTPS.
+Create an account from the header to save tasks, notes, intentions, check-ins, and other personal updates to your own profile. Account data is stored in PostgreSQL. Passwords are stored as scrypt hashes, and sign-in sessions use HTTP-only cookies that remain valid for 14 days. Set COOKIE_SECURE=true when serving the API over HTTPS.
+
+The Admin demo is disabled by default so visitors can create their own accounts. To enable it for an isolated local preview, set `LIFEOS_LOCAL_DEMO=true` in `.env`; keep it disabled for shared or public deployments.
 
 ## Fast local development (recommended)
 

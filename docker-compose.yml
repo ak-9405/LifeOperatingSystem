@@ -39,7 +39,7 @@ services:
     command: ["npm", "run", "server"]
     environment:
       PORT: 4000
-      LIFEOS_LOCAL_DEMO: "true"
+      LIFEOS_LOCAL_DEMO: ${LIFEOS_LOCAL_DEMO:-false}
       DATABASE_URL: postgresql://lifeos:${POSTGRES_PASSWORD:-lifeos_dev}@database:5432/lifeos
       TRANSLATION_SERVICE_URL: http://translator:5000/translate
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
