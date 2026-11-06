@@ -49,7 +49,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .user-lines span { color: #9aa39c; font-size: 14px; }
 .user-chevron { margin-left: auto; color: #9ca59e; }
 .main-content { min-height: 100vh; margin-left: 244px; }
-.topbar { height: 65px; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; border-bottom: 1px solid rgba(233,235,229,.84); background: rgba(250,251,247,.68); backdrop-filter: blur(17px) saturate(1.1); -webkit-backdrop-filter: blur(17px) saturate(1.1); }
+.topbar { position: relative; z-index: 60; height: 65px; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; border-bottom: 1px solid rgba(233,235,229,.84); background: rgba(250,251,247,.68); backdrop-filter: blur(17px) saturate(1.1); -webkit-backdrop-filter: blur(17px) saturate(1.1); }
 .topbar-context { display: flex; align-items: center; gap: 8px; color: #929c94; font-size: 14px; }
 .topbar-dot { width: 6px; height: 6px; border-radius: 50%; background: #83a88b; box-shadow: 0 0 0 3px #e7efe4; }
 .topbar-actions { display: flex; align-items: center; gap: 19px; }
