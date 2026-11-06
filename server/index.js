@@ -13,7 +13,7 @@ const app = express();
 const port = Number(process.env.PORT || 4000);
 const databaseUrl =
   process.env.DATABASE_URL ||
-  'postgresql://lifeos:lifeos_dev@localhost:5432/lifeos';
+  'postgresql://lifeos:lifeos_dev@localhost:5433/lifeos';
 
 const pool = new Pool({
   connectionString: databaseUrl,

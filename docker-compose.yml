@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: lifeos
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lifeos_dev}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - lifeos_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/001-lifeos.sql:ro

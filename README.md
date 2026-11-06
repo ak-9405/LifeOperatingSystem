@@ -10,15 +10,20 @@ A responsive personal life dashboard built with React, Vite, Express, PostgreSQL
 
 The first startup downloads the free LibreTranslate image and language models. Docker keeps the models in a named volume, and later translations run locally without sending page content to a paid translation API.
 
-PostgreSQL stores contact form submissions. The API runs on port 4000 and the database on port 5432.
+PostgreSQL stores contact form submissions. The API runs on port 4000; PostgreSQL uses port 5432 inside Docker and host port 5433.
 
 Create an account from the header to save area intentions and check-ins to your own profile. Passwords are stored as scrypt hashes, and sign-in sessions use HTTP-only cookies. Set COOKIE_SECURE=true when serving the API over HTTPS.
 
-## Run the web app locally
+## Fast local development (recommended)
 
-Start PostgreSQL with docker compose up -d database, then run npm install and npm run dev.
+Run the web app and API directly on your computer, and keep only PostgreSQL and LibreTranslate in Docker:
 
-When running locally, Vite uses its default available port and proxies /api requests to the Express server on port 4000. Start the database and local translator first with docker compose up -d database translator.
+1. Run `npm install` once.
+2. Start the supporting services with `docker compose up -d database translator`.
+3. Run `npm run dev`.
+4. Open [http://localhost:5173](http://localhost:5173).
+
+Vite refreshes the browser as source files change and proxies `/api` requests to the Express server on port 4000. PostgreSQL is available on host port 5433 to avoid conflicts with a locally installed PostgreSQL server; the API container continues to use port 5432 on the Docker network.
 
 ## Translation setup
 
