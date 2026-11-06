@@ -7,7 +7,7 @@ export default function PrivacyPage(){return <div className="route-page"><sectio
             <div className="privacy-grid">
               <article>
                 <h3>Tasks and life areas</h3>
-                <p>Tasks, intentions, dated check-ins, task reminder times, health readings and goals require an account and are saved in the app database. Account export and deletion include these records.</p>
+                <p>Tasks, intentions, dated check-ins, private life-area journal entries, task reminder times, health readings and goals require an account and are saved in the app database. Account export and deletion include these records. Authorized database administrators can access stored content.</p>
               </article>
               <article>
                 <h3>Contact notes</h3>
@@ -15,7 +15,7 @@ export default function PrivacyPage(){return <div className="route-page"><sectio
               </article>
               <article>
                 <h3>Activity calendar</h3>
-                <p>The calendar records check-ins and task completions by date. Older check-in totals were saved without dates, so they are not assigned to calendar days.</p>
+                <p>The calendar marks a day when you write in a life area, log a check-in or finish a task. Journal activity follows your local date. Older check-in totals were saved without dates, so they are not assigned to calendar days.</p>
               </article>
             </div>
           </section></div>;}

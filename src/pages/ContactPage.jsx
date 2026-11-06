@@ -21,7 +21,6 @@ export default function ContactPage({currentUser,contactStatus,handleContactSubm
                 <select name="area" defaultValue="">
                   <option value="" disabled>Choose what you’re curious about</option>
                   <option value="Life OS">The Life OS experience</option>
-                  <option value="Daily prompts">Daily reflection prompts</option>
                   <option value="Integrations">Connecting my tools</option>
                   <option value="Something else">Something else entirely</option>
                 </select>

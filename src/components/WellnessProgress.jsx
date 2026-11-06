@@ -1,5 +1,5 @@
-import { Activity, CalendarClock, Check, CircleHelp, Footprints, HeartPulse, MoonStar, Watch } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { Activity, CalendarClock, Check, CircleHelp, Footprints, HeartPulse, MoonStar, Pencil, Watch } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import './WellnessProgress.css';
 
 const providers = [
@@ -20,13 +20,14 @@ function formatSleep(minutes) {
   return hours + 'h' + (remainder ? ' ' + remainder + 'm' : '');
 }
 
-function MetricCard({ icon: Icon, label, value, unit, goal, progress, caption }) {
+function MetricCard({ icon: Icon, label, value, unit, goal, progress, caption, onEdit }) {
   return (
     <article className="wellness-metric-card">
       <div className="wellness-metric-top">
         <span className="wellness-metric-icon"><Icon size={16} /></span>
         <span>{label}</span>
       </div>
+      <button type="button" className="wellness-metric-edit" aria-label={'Edit ' + label} title={'Edit ' + label} onClick={onEdit}><Pencil size={13} /></button>
       <strong className="wellness-metric-value">{value}<small>{unit}</small></strong>
       {goal ? (
         <div className="wellness-goal-meter" aria-label={progress + '% of goal'}>
@@ -50,6 +51,8 @@ export default function WellnessProgress({ authenticated }) {
   const [setupOpen, setSetupOpen] = useState(false);
   const [entry, setEntry] = useState({ date: today, steps: '', sleepHours: '', restingPulse: '' });
   const [goalDraft, setGoalDraft] = useState({ steps: '', sleepHours: '' });
+  const [focusMetric, setFocusMetric] = useState(null);
+  const metricInputs = useRef({});
 
   useEffect(() => {
     if (!authenticated) {
@@ -76,6 +79,14 @@ export default function WellnessProgress({ authenticated }) {
     });
   }, [goals.steps, goals.sleep]);
 
+  useEffect(() => {
+    if (!editingDay || !focusMetric) return;
+    const input = metricInputs.current[focusMetric];
+    input?.focus();
+    input?.select();
+    setFocusMetric(null);
+  }, [editingDay, focusMetric]);
+
   const todayEntry = days.find((day) => day.date === today) || null;
   const weekStart = useMemo(() => {
     const start = new Date();
@@ -97,7 +108,7 @@ export default function WellnessProgress({ authenticated }) {
     ? Math.min(100, Math.round(todayEntry.sleepMinutes / goals.sleep * 100))
     : 0;
 
-  function openEntryForm() {
+  function openEntryForm(focusField = null) {
     setMessage('');
     setEntry({
       date: today,
@@ -105,6 +116,7 @@ export default function WellnessProgress({ authenticated }) {
       sleepHours: todayEntry?.sleepMinutes ? String((todayEntry.sleepMinutes / 60).toFixed(1)) : '',
       restingPulse: todayEntry?.restingPulse ?? '',
     });
+    setFocusMetric(focusField);
     setEditingDay(true);
   }
 
@@ -199,20 +211,20 @@ export default function WellnessProgress({ authenticated }) {
 
           <div className="wellness-week-summary">
             <span><strong>{trackedDays}</strong><small>tracked days this week</small></span>
-            <span><strong>{averageSteps === null ? '—' : averageSteps.toLocaleString('en-GB')}</strong><small>average steps / day</small></span>
-            <span><strong>{formatSleep(averageSleep)}</strong><small>average sleep</small></span>
+            <span><strong>{averageSteps === null ? '0' : averageSteps.toLocaleString('en-GB')}</strong><small>average steps / day</small></span>
+            <span><strong>{formatSleep(averageSleep ?? 0)}</strong><small>average sleep</small></span>
           </div>
 
           <div className="wellness-metric-grid">
-            <MetricCard icon={Footprints} label="Steps today" value={todayEntry?.steps === null || todayEntry?.steps === undefined ? '—' : todayEntry.steps.toLocaleString('en-GB')} unit=" steps" goal={goals.steps ? goals.steps.toLocaleString('en-GB') + ' steps' : null} progress={stepsProgress} caption={goals.steps ? stepsProgress + '% of your daily target' : 'Set a steps target to track progress'} />
-            <MetricCard icon={MoonStar} label="Sleep" value={formatSleep(todayEntry?.sleepMinutes)} unit="" goal={goals.sleep ? formatSleep(goals.sleep) : null} progress={sleepProgress} caption={goals.sleep ? sleepProgress + '% of your nightly target' : 'Set a sleep target to track progress'} />
-            <MetricCard icon={HeartPulse} label="Average pulse" value={todayEntry?.restingPulse ?? '—'} unit=" bpm" goal={null} progress={0} caption={todayEntry?.restingPulse ? 'Daily reading · shown without interpretation' : 'No pulse reading for today'} />
+            <MetricCard icon={Footprints} label="Steps today" value={todayEntry?.steps == null ? '0' : todayEntry.steps.toLocaleString('en-GB')} unit=" steps" goal={goals.steps ? goals.steps.toLocaleString('en-GB') + ' steps' : null} progress={stepsProgress} caption={todayEntry?.steps == null ? 'No reading entered yet' : goals.steps ? stepsProgress + '% of your daily target' : 'Daily reading'} onEdit={() => openEntryForm('steps')} />
+            <MetricCard icon={MoonStar} label="Sleep" value={formatSleep(todayEntry?.sleepMinutes ?? 0)} unit="" goal={goals.sleep ? formatSleep(goals.sleep) : null} progress={sleepProgress} caption={todayEntry?.sleepMinutes == null ? 'No reading entered yet' : goals.sleep ? sleepProgress + '% of your nightly target' : 'Daily reading'} onEdit={() => openEntryForm('sleepHours')} />
+            <MetricCard icon={HeartPulse} label="Average pulse" value={todayEntry?.restingPulse ?? '0'} unit=" bpm" goal={null} progress={0} caption={todayEntry?.restingPulse == null ? 'No reading entered yet' : 'Daily reading · shown without interpretation'} onEdit={() => openEntryForm('restingPulse')} />
           </div>
 
           {todayEntry?.source && <div className="wellness-data-source">Latest reading source: <strong>{todayEntry.source === 'demo' ? 'SAMPLE DATA' : todayEntry.source.toUpperCase()}</strong></div>}
 
           <div className="wellness-actions">
-            <button type="button" onClick={openEntryForm}><CalendarClock size={14} /> {todayEntry ? 'Edit daily readings' : 'Add daily readings'}</button>
+            <button type="button" onClick={() => openEntryForm()}><CalendarClock size={14} /> {todayEntry ? 'Edit daily readings' : 'Add daily readings'}</button>
             <button type="button" onClick={() => { setMessage(''); setEditingGoals((open) => !open); }}><Check size={14} /> {editingGoals ? 'Close goals' : 'Set goals'}</button>
           </div>
 
@@ -220,9 +232,9 @@ export default function WellnessProgress({ authenticated }) {
             <form className="wellness-edit-form" onSubmit={saveEntry}>
               <div className="wellness-form-title"><strong>Daily readings</strong><span>Optional fields; enter only what you track.</span></div>
               <label>Date<input type="date" max={today} value={entry.date} onChange={(event) => setEntry((current) => ({ ...current, date: event.target.value }))} required /></label>
-              <label>Steps<input type="number" min="0" max="100000" step="1" value={entry.steps} onChange={(event) => setEntry((current) => ({ ...current, steps: event.target.value }))} placeholder="e.g. 7200" /></label>
-              <label>Sleep (hours)<input type="number" min="1" max="24" step="0.1" value={entry.sleepHours} onChange={(event) => setEntry((current) => ({ ...current, sleepHours: event.target.value }))} placeholder="e.g. 7.5" /></label>
-              <label>Average pulse (bpm)<input type="number" min="25" max="240" step="1" value={entry.restingPulse} onChange={(event) => setEntry((current) => ({ ...current, restingPulse: event.target.value }))} placeholder="e.g. 62" /></label>
+              <label>Steps<input ref={(input) => { metricInputs.current.steps = input; }} type="number" min="0" max="100000" step="1" value={entry.steps} onChange={(event) => setEntry((current) => ({ ...current, steps: event.target.value }))} placeholder="e.g. 7200" /></label>
+              <label>Sleep (hours)<input ref={(input) => { metricInputs.current.sleepHours = input; }} type="number" min="1" max="24" step="0.1" value={entry.sleepHours} onChange={(event) => setEntry((current) => ({ ...current, sleepHours: event.target.value }))} placeholder="e.g. 7.5" /></label>
+              <label>Average pulse (bpm)<input ref={(input) => { metricInputs.current.restingPulse = input; }} type="number" min="25" max="240" step="1" value={entry.restingPulse} onChange={(event) => setEntry((current) => ({ ...current, restingPulse: event.target.value }))} placeholder="e.g. 62" /></label>
               <div className="wellness-form-actions"><button type="submit" disabled={busy}>{busy ? 'Saving…' : 'Save readings'}</button><button type="button" onClick={() => setEditingDay(false)}>Cancel</button></div>
             </form>
           )}

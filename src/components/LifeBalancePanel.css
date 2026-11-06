@@ -31,6 +31,7 @@
 .activity-day { position: relative; display: grid; place-items: center; min-width: 0; aspect-ratio: 1; padding: 0; border: 1px solid transparent; border-radius: 10px; color: #758479; background: #f7f8f4; font-size: 12px; font-variant-numeric: tabular-nums; cursor: pointer; transition: transform .15s, border-color .15s, background .15s, color .15s; }
 .activity-day:hover:not(:disabled) { z-index: 1; border-color: #c7d9c2; transform: translateY(-2px); }
 .activity-day[data-level="1"] { color: #52745a; background: #e8f0e4; }
+.activity-day.has-journal[data-level="1"] { color: #426b4e; background: #cfe0c8; }
 .activity-day[data-level="2"] { color: #426b4e; background: #cfe0c8; }
 .activity-day[data-level="3"] { color: #fff; background: #63866a; }
 .activity-day i { position: absolute; bottom: 4px; width: 4px; height: 4px; border-radius: 50%; background: currentColor; opacity: .7; }
@@ -55,6 +56,7 @@
 .activity-event-list li > strong { color: #607862; font-size: 10px; font-weight: 650; }
 .activity-event-icon { display: grid; flex: 0 0 auto; place-items: center; width: 21px; height: 21px; border-radius: 7px; color: #5a8162; background: #e8f0e4; }
 .activity-event-icon.is-task { color: #8a7950; background: #f3efdf; }
+.activity-event-icon.is-journal { color: #527b59; background: #e3eee0; }
 .activity-day-empty { margin: 9px 0 1px; color: #98a399; font-size: 11px; line-height: 1.45; }
 .activity-error { color: #a0584b; }
 .activity-history-note { margin: 9px 0 0; color: #a1aaa0; font-size: 9px; line-height: 1.45; }

@@ -1,4 +1,4 @@
-import { ArrowRight, CalendarDays, Check, ChevronLeft, ChevronRight, CircleCheck, Leaf, LockKeyhole, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, CalendarDays, Check, ChevronLeft, ChevronRight, CircleCheck, Leaf, LockKeyhole, Sparkles } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import './LifeBalancePanel.css';
 
@@ -18,6 +18,7 @@ export default function LifeBalancePanel({ language = 'en', authenticated = fals
   const [activity, setActivity] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [journalRefresh, setJournalRefresh] = useState(0);
 
   const year = month.getFullYear();
   const monthIndex = month.getMonth();
@@ -29,6 +30,12 @@ export default function LifeBalancePanel({ language = 'en', authenticated = fals
   const weekdayFormatter = new Intl.DateTimeFormat(language, { weekday: 'short', timeZone: 'UTC' });
   const dayFormatter = new Intl.DateTimeFormat(language, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
   const weekdays = Array.from({ length: 7 }, (_, index) => weekdayFormatter.format(new Date(Date.UTC(2024, 0, 1 + index))));
+
+  useEffect(() => {
+    const refreshJournalActivity = () => setJournalRefresh((value) => value + 1);
+    window.addEventListener('lifeos:journal-saved', refreshJournalActivity);
+    return () => window.removeEventListener('lifeos:journal-saved', refreshJournalActivity);
+  }, []);
 
   useEffect(() => {
     if (!authenticated) {
@@ -52,7 +59,7 @@ export default function LifeBalancePanel({ language = 'en', authenticated = fals
       })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [authenticated, monthKey, refreshKey]);
+  }, [authenticated, journalRefresh, monthKey, refreshKey]);
 
   const activityByDate = useMemo(() => activity.reduce((all, item) => {
     if (!all[item.date]) all[item.date] = [];
@@ -81,9 +88,9 @@ export default function LifeBalancePanel({ language = 'en', authenticated = fals
         <div className="activity-panel-topline"><span className="eyebrow">YOUR ACTIVITY</span><span className="activity-leaf-mark"><Leaf size={15} /></span></div>
         <div className="activity-locked-heading"><span className="activity-calendar-mark"><CalendarDays size={20} /></span><span className="eyebrow">A MONTH AT A GLANCE</span></div>
         <h3 id="activity-calendar-title">Small steps,<br /><em>in full view.</em></h3>
-        <p className="activity-intro">Your calendar fills with the check-ins you log and the tasks you finish. It’s a record of your days, shaped by you.</p>
+        <p className="activity-intro">Your calendar fills when you write, log a check-in, or finish a task. It’s a record of your days, shaped by you.</p>
         <div className="activity-locked-note"><LockKeyhole size={16} /><span>Your personal activity appears here once you enter your private workspace.</span></div>
-        <span className="activity-locked-foot"><Sparkles size={13} /> Check-ins · finished tasks · your own rhythm</span>
+        <span className="activity-locked-foot"><Sparkles size={13} /> Journal writing · check-ins · finished tasks</span>
       </aside>
     );
   }
@@ -98,10 +105,10 @@ export default function LifeBalancePanel({ language = 'en', authenticated = fals
         </div>
         <div className="activity-month-total"><strong>{monthDays}</strong><span>active<br />{monthDays === 1 ? 'day' : 'days'}</span></div>
       </div>
-      <div className="activity-intro-row"><p className="activity-intro">Every check-in and finished task adds a little color to your month.</p><span className="activity-leaf-orbit" aria-hidden="true"><Leaf size={18} /></span></div>
+      <div className="activity-intro-row"><p className="activity-intro">Writing, check-ins and finished tasks add a little color to your month.</p><span className="activity-leaf-orbit" aria-hidden="true"><Leaf size={18} /></span></div>
 
       <div className="activity-month-toolbar">
-        <div><span className="activity-month-label">{monthTitle}</span><span className="activity-month-subtitle">{monthEvents} {monthEvents === 1 ? 'small step' : 'small steps'}</span></div>
+        <div><span className="activity-month-label">{monthTitle}</span><span className="activity-month-subtitle">{monthEvents} {monthEvents === 1 ? 'recorded activity' : 'recorded activities'}</span></div>
         <div className="activity-month-controls" role="group" aria-label="Change calendar month">
           <button type="button" aria-label="Previous month" onClick={() => moveMonth(-1)}><ChevronLeft size={16} /></button>
           <button type="button" aria-label="Next month" onClick={() => moveMonth(1)} disabled={isCurrentMonth}><ChevronRight size={16} /></button>
@@ -117,12 +124,13 @@ export default function LifeBalancePanel({ language = 'en', authenticated = fals
           const items = activityByDate[dateKey] || [];
           const count = items.reduce((sum, item) => sum + item.count, 0);
           const level = count === 0 ? 0 : count === 1 ? 1 : count < 4 ? 2 : 3;
+          const hasJournal = items.some((item) => item.kind === 'journal');
           const formatted = dayFormatter.format(new Date(dateKey + 'T12:00:00Z'));
           return (
             <button
               type="button"
               key={dateKey}
-              className={'activity-day' + (selectedDate === dateKey ? ' is-selected' : '') + (dateKey === today ? ' is-today' : '')}
+              className={'activity-day' + (hasJournal ? ' has-journal' : '') + (selectedDate === dateKey ? ' is-selected' : '') + (dateKey === today ? ' is-today' : '')}
               data-level={level}
               aria-label={formatted + (count ? ', ' + count + (count === 1 ? ' activity' : ' activities') : ', no activity logged')}
               aria-pressed={selectedDate === dateKey}
@@ -137,13 +145,14 @@ export default function LifeBalancePanel({ language = 'en', authenticated = fals
       <div className="activity-legend"><span>Quiet</span><i data-level="0" /><i data-level="1" /><i data-level="2" /><i data-level="3" /><span>Full</span></div>
 
       <section className="activity-day-detail" aria-live="polite" aria-atomic="true">
-        <div className="activity-day-detail-head"><div><span className="eyebrow">YOUR DAY</span><strong>{selectedDateText}</strong></div><span className="activity-day-count">{selectedTotal} {selectedTotal === 1 ? 'step' : 'steps'}</span></div>
+        <div className="activity-day-detail-head"><div><span className="eyebrow">YOUR DAY</span><strong>{selectedDateText}</strong></div><span className="activity-day-count">{selectedTotal} {selectedTotal === 1 ? 'activity' : 'activities'}</span></div>
         {error ? <p className="activity-day-empty activity-error">{error}</p> : selectedEvents.length ? (
           <ul className="activity-event-list">
             {selectedEvents.map((item) => {
-              const area = areaNames[item.areaSlug] || 'Life area';
+              const area = areaNames[item.areaSlug] || 'your life areas';
               const task = item.kind === 'task';
-              return <li key={item.kind + '-' + item.areaSlug}><span className={'activity-event-icon' + (task ? ' is-task' : '')}>{task ? <Check size={13} /> : <CircleCheck size={14} />}</span><span>{task ? 'Task finished' : 'Check-in'} · {area}</span><strong>{item.count > 1 ? '×' + item.count : '1'}</strong></li>;
+              const journal = item.kind === 'journal';
+              return <li key={item.kind + '-' + item.areaSlug}><span className={'activity-event-icon' + (task ? ' is-task' : '') + (journal ? ' is-journal' : '')}>{task ? <Check size={13} /> : journal ? <BookOpen size={13} /> : <CircleCheck size={14} />}</span><span>{journal ? 'Journal writing' : task ? 'Task finished · ' + area : 'Check-in · ' + area}</span><strong>{item.count > 1 ? '×' + item.count : '1'}</strong></li>;
             })}
           </ul>
         ) : <p className="activity-day-empty">{loading ? 'Gathering your activity…' : 'A little blank space is a good place to start.'}</p>}

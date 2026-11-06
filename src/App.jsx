@@ -2,6 +2,7 @@ import { ArrowRight, Check, ChevronDown, Compass, Globe2, PanelLeftClose, PanelL
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router';
 import { Sidebar, WorkspaceFooter } from './components/WorkspaceShell.jsx';
+import NatureBackdrop from './components/NatureBackdrop.jsx';
 import { areas, navigation } from './data/workspace.js';
 import { localDateString, makeTaskId } from './lib/tasks.js';
 import usePageTranslator from './hooks/usePageTranslator.js';
@@ -9,7 +10,6 @@ import DayPage from './pages/DayPage.jsx';
 import ProgressPage from './pages/ProgressPage.jsx';
 import LifeAreasPage from './pages/LifeAreasPage.jsx';
 import AreaPage from './pages/AreaPage.jsx';
-import PromptsPage from './pages/PromptsPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import AboutPage from './pages/AboutPage.jsx';
 import PrivacyPage from './pages/PrivacyPage.jsx';
@@ -54,7 +54,6 @@ function App() {
   const [now] = useState(() => new Date());
   const translator = usePageTranslator(setNotice, setIsTranslating);
   const contactForm = useRef(null);
-  const sidebarToggle = useRef(null);
   const routeFocus = useRef(null);
   const [sidebarOpen, setSidebarOpen] = useState(() => { try { return localStorage.getItem('lifeos.sidebar-open') !== 'false'; } catch { return true; } });
   const [desktopLayout, setDesktopLayout] = useState(() => window.matchMedia('(min-width: 761px)').matches);
@@ -411,11 +410,12 @@ function App() {
   const accountActions = { error: authError, pending: authPending, onModeChange: openAuth, onSubmit: handleAuthSubmit, onSignOut: handleSignOut, onExportData: handleExportAccount, onDeleteAccount: handleDeleteAccount };
 
   return <div className={'app-shell' + (!sidebarOpen ? ' is-sidebar-collapsed' : '')}>
-    <Sidebar user={currentUser} closed={desktopLayout && !sidebarOpen} onClose={() => { sidebarToggle.current?.focus(); setSidebarOpen(false); }} onAccountClick={handleAccountClick} />
+    <NatureBackdrop />
+    <Sidebar user={currentUser} closed={desktopLayout && !sidebarOpen} onAccountClick={handleAccountClick} />
     <main className="main-content">
       <header className="topbar">
         <div className="topbar-start">
-          <button type="button" className="sidebar-toggle" ref={sidebarToggle} aria-controls="your-space-sidebar" aria-expanded={sidebarOpen} aria-label={sidebarOpen ? 'Hide Your space sidebar' : 'Show Your space sidebar'} onClick={() => setSidebarOpen((open) => !open)}>
+          <button type="button" className="sidebar-toggle" aria-controls="your-space-sidebar" aria-expanded={sidebarOpen} aria-label={sidebarOpen ? 'Hide Your space sidebar' : 'Show Your space sidebar'} onClick={() => setSidebarOpen((open) => !open)}>
             {sidebarOpen ? <PanelLeftClose size={17} /> : <PanelLeftOpen size={17} />}<span>Your space</span>
           </button>
           <div className="topbar-context"><span className="topbar-dot" /><span>{pageTitle}</span></div>
@@ -440,11 +440,11 @@ function App() {
       <div className="page-content">
         <div className="route-outlet" ref={routeFocus} tabIndex={-1} aria-label={pageTitle}>
           <Routes>
-            <Route path="/" element={<DayPage {...{currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask}} />} />
+            <Route path="/" element={<DayPage {...{currentUser, date, greetingPrefix, totalCheckIns, doneCount, displayedTasks, plannedMinutes, today, language, activityRefreshKey, newTaskTitle, setNewTaskTitle, newTaskArea, setNewTaskArea, newTaskDate, setNewTaskDate, newTaskMinutes, setNewTaskMinutes, newTaskReminderTime, setNewTaskReminderTime, handleAddTask, handleUpdateTask, handleDeleteTask}} onCheckIn={handleCheckIn} />} />
             <Route path="/progress" element={<ProgressPage currentUser={currentUser} tasks={tasks} areaEntries={areaEntries} />} />
             <Route path="/life-areas" element={<LifeAreasPage currentUser={currentUser} areaEntries={areaEntries} />} />
             <Route path="/life-areas/:slug" element={<AreaPage currentUser={currentUser} areaEntries={areaEntries} onCheckIn={handleCheckIn} onSaveIntention={handleSaveIntention} onSignIn={() => openAuth('login')} />} />
-            <Route path="/prompts" element={<PromptsPage currentUser={currentUser} />} />
+            <Route path="/prompts" element={<Navigate to="/life-areas" replace />} />
             <Route path="/philosophy" element={<PhilosophyPage currentUser={currentUser} />} />
             <Route path="/contact" element={<ContactPage currentUser={currentUser} contactStatus={contactStatus} handleContactSubmit={handleContactSubmit} contactForm={contactForm} />} />
             <Route path="/notes" element={<Navigate to="/contact" replace />} />

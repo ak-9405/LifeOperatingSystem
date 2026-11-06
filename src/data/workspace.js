@@ -1,14 +1,12 @@
-import { BarChart3, BookOpenCheck, BriefcaseBusiness, CircleDollarSign, Compass, Flower2, HeartHandshake, HeartPulse, LibraryBig, MessageSquare, Quote, Sparkles, Target, TrendingUp, WalletCards, Zap } from 'lucide-react';
+import { BarChart3, BookOpenCheck, BriefcaseBusiness, CircleDollarSign, Compass, Flower2, HeartHandshake, HeartPulse, LibraryBig, MessageSquare, Quote, Target, TrendingUp, WalletCards, Zap } from 'lucide-react';
 
 export const navigation = [
 {href:'/',label:'Your day',icon:Compass},
 {href:'/progress',label:'Progress',icon:TrendingUp},
 {href:'/life-areas',label:'Life areas',icon:Flower2},
-{href:'/prompts',label:'Daily prompts',icon:Sparkles},
 {href:'/philosophy',label:'Philosophy',icon:Quote},
 {href:'/contact',label:'Contact us',icon:MessageSquare},
 ];
-
 export const areas = [
   { slug: 'money', title: 'Money', value: '$12,460', detail: 'Your monthly cushion', change: '+8.2%', icon: WalletCards, tone: 'moss', progress: 72 },
   { slug: 'health', title: 'Health', value: '4 of 5', detail: 'Movement days this week', change: 'On track', icon: HeartPulse, tone: 'coral', progress: 80 },
@@ -32,10 +30,10 @@ export const steps = [
   },
   {
     number: '02',
-    href: '/prompts',
-    title: 'See what deserves your attention',
-    detail: 'Use your task list and reflection prompts to choose a few clear priorities.',
-    icon: Sparkles,
+    href: '/life-areas',
+    title: 'Make room for what is on your mind',
+    detail: 'Write freely in a life-area journal, and return whenever you need to.',
+    icon: BookOpenCheck,
     tone: 'step-lilac',
   },
   {
@@ -46,10 +44,4 @@ export const steps = [
     icon: TrendingUp,
     tone: 'step-peach',
   },
-];
-
-export const coachSuggestions = [
-  'What is one thing you can do in ten minutes to make tomorrow easier?',
-  'Which small part of today would feel restorative?',
-  'What deserves your attention most today?',
 ];

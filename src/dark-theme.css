@@ -1,0 +1,211 @@
+/* System-matched dark theme: deep green-charcoal surfaces with soft, readable text. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    color: #e2e9e3;
+    background: #121a16;
+    --ink: #e2e9e3;
+    --forest: #a5c5aa;
+    --line: #34433a;
+    --canvas: #18221c;
+    --paper: #202c25;
+  }
+
+  html, body { background: #121a16; color: #dce5de; }
+  ::selection { background: #41654d; color: #f3f7f2; }
+  .app-shell { color: #dce5de; }
+  .sidebar, .topbar { color: #dce5de; background: rgba(22,32,26,.91); border-color: rgba(133,158,137,.18); }
+  .brand-name, .welcome h1, .section-heading h2, .pulse-title-row h3,
+  .workspace-page-header h1, .privacy-heading h1, .panel-heading h2,
+  .area-dialog-title-row h2, .area-dialog.page-panel h1,
+  .area-journal-heading h2, .area-journal-date-title h3,
+  .contact-copy h2, .how-heading h2 { color: #cbd8ce; font-weight: 500; }
+  .area-card .area-value, .area-card:hover .area-value { color: #dce8dd; }
+  .area-card .area-change { color: #b4c8b4; }
+  .brand-name > span, .welcome h1 em, .section-heading h2 em { color: #a4c7a6; }
+  .sidebar-heading, .brand-edition, .topbar-context, .eyebrow,
+  .welcome-subtitle, .section-heading > div > p, .pulse-description,
+  .workspace-page-header p, .footer, .footer-copyright { color: #a4b1a7; }
+  .sidebar-mantra { color: #dce5de; background: linear-gradient(145deg,#202e25,#1b2821); border-color: #34443a; }
+  .sidebar-mantra p, .user-lines strong { color: #dce7dd; }
+  .sidebar-mantra > span:last-child, .user-lines span { color: #a2b0a4; }
+  .sidebar-user { border-color: #334239; }
+  .nav-link { color: #b0beb3; }
+  .nav-link:hover, .nav-link-active { color: #d9e9dc; background: #293a2e; }
+  .nav-link-active > svg { color: #a9c9a9; }
+  .topbar-dot { box-shadow: 0 0 0 3px #29392e; }
+  .language-picker, .language-picker select, .topbar-cta, .footer-links { color: #b4c2b6; }
+  .mobile-menu-button { color: #d6e4d8; background: #293a2e; }
+  .mobile-nav { background: rgba(25,37,30,.97); border-color: #3b4c40; }
+
+  .week-streak, .pulse-card, .area-card, .step-card, .contact-section,
+  .contact-form, .privacy-section, .day-demo-note, .demo-banner,
+  .home-checkin, .task-add-form, .task-add-fields, .task-edit-form,
+  .task-reminder-control, .page-panel, .language-menu,
+  .area-dialog, .auth-dialog, .account-dialog, .account-card,
+  .area-next-step, .area-dialog-progress, .area-signin-gate,
+  .contact-auth-gate, .task-auth-gate, .reflection-locked,
+  .account-data-actions, .account-delete-confirm,
+  .area-journal, .area-journal-editor, .area-journal-note-card,
+  .wellness-progress, .wellness-connection, .wellness-provider-list,
+  .wellness-week-summary > span, .wellness-metric-card,
+  .wellness-edit-form, .wellness-locked, .activity-event-card,
+  .workspace-quick-links a, .progress-summary-card, .area-progress-panel,
+  .area-progress-list > a, .quote-card, .quote-source,
+  .quote-locked, .quote-loading, .quote-error, .signed-out-activity-cta,
+  .translation-indicator, .toast-notice {
+    color: #dce5de;
+    background-color: #202c25;
+    border-color: #35453b;
+    box-shadow: 0 8px 24px rgba(0,0,0,.13);
+  }
+
+  .how-section { color: #dce5de; background: #1b2720; }
+  .step-card { background: rgba(38,52,43,.88); }
+  .brief-card, .coach-section { background-color: #20392d; }
+  .contact-section { background: rgba(27,39,32,.91); }
+  .quote-card { background: radial-gradient(ellipse at 100% 0%, #293a2a 0, transparent 53%), #202a22; }
+  .quote-source, .quote-locked, .quote-loading, .quote-error { background-color: #202a22; }
+  .page-content, .route-page { color: #dce5de; }
+
+  .area-card, .area-title, .step-card h3, .workspace-quick-links strong,
+  .progress-summary-card strong, .panel-heading h2, .area-progress-list strong,
+  .area-progress-list b, .area-dialog-title-row h2, .area-dialog-value,
+  .area-next-copy strong, .area-journal-heading h2, .area-journal-date-title h3,
+  .area-journal-note-preview, .wellness-heading h3, .wellness-connection strong,
+  .wellness-metric-value, .wellness-form-title strong, .contact-assurance strong,
+  .form-heading, .quote-content blockquote p, .quote-content figcaption strong,
+  .quote-locked h2, .area-progress-list .area-icon { color: #dce8dd; }
+  .area-progress-list .area-icon { filter: none; color: #d9edd8; background: #344a39; border: 1px solid #526c53; }
+  .area-detail, .area-card .area-title, .step-card p, .how-heading > p,
+  .steps-caption, .welcome-subtitle, .streak-copy strong, .streak-copy small,
+  .pulse-description, .pulse-note, .contact-copy > p, .contact-assurance small,
+  .contact-contact-line, .field-wrap, .workspace-quick-links small,
+  .progress-summary-card > span, .progress-summary-card small,
+  .area-progress-list small, .quote-content figcaption > span:last-child,
+  .quote-card-hint, .quote-source strong, .quote-source small,
+  .page-content .quote-edition-note, .area-journal-intro,
+  .area-journal-locked > p, .area-journal-editor-bottom > span,
+  .area-journal-editor-bottom small, .area-journal-small-note,
+  .area-journal-note-date, .wellness-heading p, .wellness-metric-caption,
+  .wellness-metric-top, .wellness-metric-value small,
+  .wellness-form-title span, .wellness-edit-form label,
+  .wellness-footnote, .wellness-locked p { color: #a8b6ab; }
+  .text-link, .route-text-link, .route-back-link, .quote-shuffle,
+  .quote-source a, .contact-assurance-icon, .wellness-status { color: #a6c9a8; }
+
+  .area-card:hover, .workspace-quick-links a:hover, .area-progress-list > a:hover,
+  .area-journal-note-card:hover:not(:disabled), .quote-control-button:hover {
+    background-color: #29382e;
+    border-color: #536b57;
+  }
+  .area-card .area-icon, .step-icon, .area-next-icon,
+  .wellness-connection-icon, .wellness-metric-icon, .wellness-locked > span,
+  .contact-assurance-icon, .activity-event-icon { background-color: #2d4032; color: #b4d0b4; }
+  .area-progress, .area-dialog-progress-track, .wellness-goal-meter,
+  .wellness-goal-meter-empty, .quote-position progress::-webkit-progress-bar { background-color: #36443a; }
+  .tone-moss, .tone-coral, .tone-lilac, .tone-sun, .tone-sky, .tone-apricot,
+  .tone-blue, .tone-mint, .tone-rose, .step-sage, .step-lilac, .step-peach {
+    filter: brightness(.72) saturate(.78);
+  }
+
+  input, select, textarea, .language-trigger, .language-menu,
+  .intention-field input, .auth-field > input, .password-input-wrap,
+  .password-input-wrap input, .area-journal-editor textarea,
+  .field-wrap input, .field-wrap textarea, .field-wrap select,
+  .home-checkin select, .task-add-primary input, .task-add-fields input,
+  .task-add-fields select, .task-edit-form input, .task-edit-form select,
+  .task-reminder-control input, .wellness-edit-form input {
+    color: #e0e9e1;
+    background-color: #17221b;
+    border-color: #3b4c40;
+  }
+  input::placeholder, textarea::placeholder, .area-journal-editor textarea::placeholder { color: #839387; }
+  select option, .language-option { color: #dbe5dc; background: #1b2821; }
+  .language-option:hover, .language-option-active { color: #e4efe4; background: #2a3b2e; }
+  .language-menu-caption { color: #9eada1; border-color: #35453b; }
+  .icon-button, .sidebar-toggle, .topbar-account,
+  .wellness-setup-button, .quote-control-button, .activity-month-controls button,
+  .area-journal-new-note, .area-journal-delete-confirm button,
+  .account-data-actions > button, .google-signin-button {
+    color: #cfddcf;
+    background-color: #26352b;
+    border-color: #405446;
+  }
+  .icon-button:hover, .sidebar-toggle:hover,
+  .wellness-setup-button:hover, .quote-control-button:hover,
+  .activity-month-controls button:hover:not(:disabled), .area-journal-new-note:hover,
+  .google-signin-button:hover:not(:disabled) { color: #eef5ed; background-color: #334a38; }
+  .area-dialog-progress, .wellness-provider-list, .wellness-edit-form,
+  .wellness-locked, .area-journal-delete-confirm, .area-signin-gate,
+  .account-delete-confirm { background-color: #1b2821; }
+  .area-journal-note-card.is-active { background: #2d4231; border-color: #607b5f; }
+  .area-journal-recent { border-color: #35453b; }
+  .activity-day { color: #b8c6ba; background: #253329; }
+  .activity-day[data-level="1"] { color: #d5e7d2; background: #38533d; }
+  .activity-day[data-level="2"] { color: #e0ebd9; background: #4a694d; }
+  .activity-day[data-level="3"] { color: #f0f5e8; background: #66815b; }
+  .activity-day[data-level="3"] i { background: #d8ead2; }
+  .activity-legend i { background: #253329; }
+  .activity-legend i[data-level="1"] { background: #38533d; }
+  .activity-legend i[data-level="2"] { background: #4a694d; }
+  .activity-legend i[data-level="3"] { background: #66815b; }
+
+  .footer { border-color: #34433a; }
+  .footer-brand, .footer-links a:hover { color: #c0d7c2; }
+  .topbar-account { color: #d0ddd2; }
+  .topbar-avatar, .user-avatar { color: #d1dfce; background: #3c4b38; }
+  .area-dialog-message, .area-journal-status, .status-success { color: #a6d0a9; }
+  .status-error, .auth-error { color: #e2a49b; }
+  .mobile-nav button, .mobile-nav a { color: #c0cec2; }
+  .mobile-nav button:hover, .mobile-nav a.active, .mobile-nav .mobile-nav-signin { color: #e0ebdf; background: #2a3b2e; }
+  .mobile-nav-divider { background: #35453b; }
+
+  /* Remaining secondary panes that have their own component styles. */
+  .life-balance-panel.activity-calendar,
+  .activity-day-detail,
+  .activity-locked-note,
+  .activity-month-total,
+  .account-signout,
+  .quote-library-count,
+  .demo-banner,
+  .day-demo-note,
+  .privacy-section,
+  .wellness-source-status,
+  .signed-out-activity-cta {
+    color: #d7e3d8;
+    background: #1c2b21;
+    border-color: #3a4e3e;
+    box-shadow: 0 7px 22px rgba(0,0,0,.12);
+  }
+  .activity-heading-row h3, .activity-locked h3,
+  .activity-month-total strong, .activity-day-detail-head strong,
+  .activity-month-label, .activity-event-list li > strong { color: #cbd8ce; }
+  .activity-panel-topline .eyebrow, .activity-calendar .eyebrow,
+  .activity-intro, .activity-month-subtitle, .activity-weekday,
+  .activity-day-detail-head .eyebrow, .activity-event-list li,
+  .activity-day-empty, .activity-history-note, .activity-locked-foot { color: #a3b4a6; }
+  .activity-leaf-mark, .activity-calendar-mark, .activity-leaf-orbit,
+  .activity-day-count, .activity-event-icon, .activity-event-icon.is-task,
+  .activity-event-icon.is-journal {
+    color: #c3ddc3;
+    background: #304633;
+    border-color: #49624a;
+  }
+  .activity-month-toolbar { border-color: #35473a; }
+  .activity-month-controls button { color: #c7dbc8; background: #263a2b; border-color: #405742; }
+  .activity-month-controls button:hover:not(:disabled) { color: #eff7ee; background: #38563b; }
+  .activity-legend i { background: #26372b; }
+  .activity-legend i[data-level="1"] { background: #38533d; }
+  .activity-legend i[data-level="2"] { background: #4a694d; }
+  .activity-legend i[data-level="3"] { background: #66815b; }
+  .wellness-source-status { color: #c5ddc4; }
+  .privacy-section, .day-demo-note, .demo-banner { color: #d7e3d8; }
+  .demo-tag { color: #d0e2ce; background: #314834; }
+  .account-signout:hover, .signed-out-activity-cta:hover { background: #293d2d; border-color: #536d54; }
+
+  /* These panes used light gradient images, which background-color alone cannot replace. */
+  .area-card, .wellness-progress, .area-journal,
+  .life-balance-panel.activity-calendar { background: #1c2b21; }
+  .area-card .area-icon { filter: none; color: #cfe5ce; background: #344a39; border-color: #526c53; }
+}

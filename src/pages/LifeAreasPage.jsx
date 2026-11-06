@@ -6,7 +6,7 @@ import { areas } from '../data/workspace.js';
 
 export default function LifeAreasPage({ currentUser, areaEntries }) {
   return <div className="route-page">
-    <PageHeader eyebrow="YOUR LIFE AREAS" title="Make room for what matters." detail="Give each part of your life a place. Choose an area to set an intention or record a check-in." action={<Link className="route-text-link" to="/progress">View your progress <ArrowRight size={14} /></Link>} />
+    <PageHeader eyebrow="YOUR LIFE AREAS" title="Make room for what matters." detail="Give each part of your life a place. Open an area to write freely, set an intention or record a check-in." action={<Link className="route-text-link" to="/progress">View your progress <ArrowRight size={14} /></Link>} />
     <div className="area-grid">{areas.map((area) => <AreaCard area={area} entry={areaEntries[area.slug]} demo={!currentUser} key={area.slug} />)}</div>
     <div className="areas-footer"><span><LockKeyhole size={13} /> Your data controls live in Account.</span><Link to="/privacy">How data is handled</Link></div>
   </div>;

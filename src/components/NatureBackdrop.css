@@ -1,0 +1,18 @@
+.nature-backdrop { position: fixed; z-index: -1; inset: 0; overflow: hidden; background: #e8eee8; pointer-events: none; }
+.nature-backdrop-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: 0; transform: scale(1.035); transition: opacity 1.45s ease, transform 18s ease; }
+.nature-backdrop-image.is-current { opacity: .76; transform: scale(1.005); }
+.nature-backdrop-wash { position: absolute; inset: 0; background: linear-gradient(118deg, rgba(248,250,246,.43), rgba(247,249,245,.35) 48%, rgba(246,249,244,.48)); }
+
+@media (max-width: 760px) {
+  .nature-backdrop-image { object-position: 57% center; }
+}
+
+@media (prefers-color-scheme: dark) {
+  .nature-backdrop { background: #111a15; }
+  .nature-backdrop-image.is-current { opacity: .78; }
+  .nature-backdrop-wash { background: linear-gradient(118deg, rgba(12,19,15,.43), rgba(13,21,16,.34) 48%, rgba(12,20,15,.46)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nature-backdrop-image { transition-duration: .01ms; }
+}

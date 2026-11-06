@@ -22,7 +22,7 @@ const pool = new Pool({
 });
 
 app.disable('x-powered-by');
-app.use(express.json({ limit: '16kb' }));
+app.use(express.json({ limit: '64kb' }));
 
 const requireAuth = createRequireAuth(pool);
 app.use('/api/auth', createAuthRouter(pool));

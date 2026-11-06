@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router';
 import './styles.css';
 import './interactions.css';
 import './pages/WorkspacePages.css';
+import './dark-theme.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

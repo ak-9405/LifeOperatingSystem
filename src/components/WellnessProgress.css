@@ -23,8 +23,10 @@
 .wellness-week-summary small { color: #919c91; font-size: 10px; line-height: 1.35; }
 .wellness-metric-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; margin-top: 9px; }
 .wellness-metric-card { position: relative; min-width: 0; padding: 12px; border: 1px solid #e9eee6; border-radius: 10px; background: #fff; }
-.wellness-metric-top { display: flex; align-items: center; gap: 7px; color: #78877b; font-size: 11px; font-weight: 650; }
+.wellness-metric-top { display: flex; align-items: center; gap: 7px; padding-right: 26px; color: #78877b; font-size: 11px; font-weight: 650; }
 .wellness-metric-icon { flex: 0 0 auto; width: 27px; height: 27px; border-radius: 8px; }
+.wellness-metric-edit { position: absolute; top: 9px; right: 9px; display: grid; place-items: center; width: 25px; height: 25px; padding: 0; border: 1px solid transparent; border-radius: 6px; color: #708274; background: transparent; cursor: pointer; }
+.wellness-metric-edit:hover, .wellness-metric-edit:focus-visible { border-color: #dce7d9; color: #3e6547; background: #f3f7f0; }
 .wellness-metric-value { display: block; margin: 12px 0 8px; overflow-wrap: anywhere; color: #334a3b; font: 400 25px/1.05 var(--serif); }
 .wellness-metric-value small { margin-left: 3px; color: #839185; font: 600 10px/1.3 var(--sans); }
 .wellness-goal-meter { height: 5px; overflow: hidden; border-radius: 999px; background: #edf1e9; }

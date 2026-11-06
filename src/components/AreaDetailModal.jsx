@@ -9,6 +9,7 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import AreaJournal from './AreaJournal.jsx';
 
 const nextSteps = {
   money: 'Give your money a ten-minute check-in. Notice one thing you handled well.',
@@ -89,6 +90,8 @@ export default function AreaDetailModal({
           <div className="area-dialog-value">{displayValue}</div>
         </div>
 
+        <AreaJournal area={area} signedIn={signedIn} onOpenAccount={onOpenSignUp} />
+
         <div className="area-dialog-progress">
           {useSample ? (
             <>
@@ -134,7 +137,7 @@ export default function AreaDetailModal({
         </div>
           </>
         ) : (
-          <div className="area-signin-gate"><LockKeyhole size={16} /><p>Your intentions and check-ins stay in your private workspace.</p><button type="button" onClick={onOpenSignUp}>Open your workspace <ArrowRight size={14} /></button></div>
+          <div className="area-signin-gate"><LockKeyhole size={16} /><p>Your intentions, notes and check-ins stay in your workspace.</p><button type="button" onClick={onOpenSignUp}>Open your workspace <ArrowRight size={14} /></button></div>
         )}
         {message && <p className="area-dialog-message" role="status">{message}</p>}
       </section>

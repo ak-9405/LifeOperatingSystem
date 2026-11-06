@@ -11,7 +11,7 @@ export function createAccountRouter(pool, requireAuth) {
 
   router.get('/export', async (request, response) => {
     try {
-      const [areaResult, taskResult, activityResult, contactResult, healthMetricsResult, healthGoalsResult] = await Promise.all([
+      const [areaResult, taskResult, activityResult, journalActivityResult, journalResult, contactResult, healthMetricsResult, healthGoalsResult] = await Promise.all([
         pool.query(
           'SELECT area_slug, intention, check_ins, updated_at FROM life_area_updates WHERE user_id = $1 ORDER BY area_slug',
           [request.user.id],
@@ -23,6 +23,15 @@ export function createAccountRouter(pool, requireAuth) {
         ),
         pool.query(
           'SELECT area_slug, activity_date FROM life_area_check_ins WHERE user_id = $1 ORDER BY activity_date',
+          [request.user.id],
+        ),
+        pool.query(
+          'SELECT activity_date FROM life_area_journal_activity WHERE user_id = $1 ORDER BY activity_date',
+          [request.user.id],
+        ),
+        pool.query(
+          "SELECT entry_id, area_slug, TO_CHAR(entry_date, 'YYYY-MM-DD') AS date, body, updated_at " +
+            'FROM life_area_journal_entries WHERE user_id = $1 ORDER BY entry_date, area_slug, entry_id',
           [request.user.id],
         ),
         pool.query(
@@ -61,7 +70,11 @@ export function createAccountRouter(pool, requireAuth) {
           createdAt: row.created_at,
           updatedAt: row.updated_at,
         })),
-        activityHistory: activityResult.rows.map((row) => ({ areaSlug: row.area_slug, date: dateValue(row.activity_date), kind: 'check-in' })),
+        activityHistory: [
+          ...activityResult.rows.map((row) => ({ areaSlug: row.area_slug, date: dateValue(row.activity_date), kind: 'check-in' })),
+          ...journalActivityResult.rows.map((row) => ({ date: dateValue(row.activity_date), kind: 'journal' })),
+        ],
+        lifeAreaJournal: journalResult.rows.map((row) => ({ id: String(row.entry_id), areaSlug: row.area_slug, date: row.date, text: row.body, updatedAt: row.updated_at })),
         healthMetrics: healthMetricsResult.rows.map((row) => ({ date: row.date, steps: row.steps === null ? null : Number(row.steps), sleepMinutes: row.sleep_minutes === null ? null : Number(row.sleep_minutes), restingPulse: row.resting_pulse === null ? null : Number(row.resting_pulse), source: row.source, updatedAt: row.updated_at })),
         healthGoals: healthGoalsResult.rows.map((row) => ({ metric: row.metric_key, target: Number(row.target_value), updatedAt: row.updated_at })),
         contactNotes: contactResult.rows.map((row) => ({

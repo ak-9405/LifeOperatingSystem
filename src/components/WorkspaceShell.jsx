@@ -1,14 +1,13 @@
-import { ArrowUpRight, ChevronDown, Leaf, PanelLeftClose } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Leaf } from 'lucide-react';
 import { Link, NavLink } from 'react-router';
 import { navigation } from '../data/workspace.js';
 
-export function Sidebar({ user, closed, onClose, onAccountClick }) {
+export function Sidebar({ user, closed, onAccountClick }) {
   const initials = user ? user.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase() : '';
   return (
     <aside id="your-space-sidebar" className="sidebar" aria-label="Main navigation" aria-hidden={closed || undefined} inert={closed || undefined}>
       <div className="sidebar-header">
         <Link className="brand" to="/" aria-label="Life OS home"><span className="brand-symbol"><Leaf size={19} strokeWidth={2.2} /></span><span className="brand-name">life<span>OS</span></span></Link>
-        <button className="sidebar-close" type="button" onClick={onClose} aria-label="Close Your space sidebar" title="Close sidebar"><PanelLeftClose size={17} /></button>
       </div>
       <span className="brand-edition">YOUR LIFE, IN RHYTHM</span>
       <span className="sidebar-heading">YOUR SPACE</span>

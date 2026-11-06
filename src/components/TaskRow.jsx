@@ -2,7 +2,7 @@ import { CalendarClock, Check, Pencil, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { areas } from '../data/workspace.js';
 
-export default function TaskRow({ task, today, onToggle, onSave, onDelete, onDownloadReminder }) {
+export default function TaskRow({ task, today, isDemoTask = false, onToggle, onSave, onDelete, onDownloadReminder }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(task);
   const [saving, setSaving] = useState(false);
@@ -15,6 +15,7 @@ export default function TaskRow({ task, today, onToggle, onSave, onDelete, onDow
     : task.taskDate < today
       ? 'Overdue'
       : new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(task.taskDate + 'T12:00:00Z'));
+  const displayTitle = isDemoTask ? task.title.replace(/^Sample:\s*/i, '') : task.title;
 
   if (editing) {
     return (
@@ -48,7 +49,7 @@ export default function TaskRow({ task, today, onToggle, onSave, onDelete, onDow
       <button type="button" className="brief-task-toggle" onClick={() => onToggle(task)} aria-pressed={task.completed}>
         <span className="task-check">{task.completed && <Check size={13} strokeWidth={2.5} />}</span>
         <span className="task-copy">
-          <span>{task.title}</span>
+          <span className="task-title-line"><span className="task-title-text">{displayTitle}</span>{isDemoTask && <span className="demo-tag">DEMO</span>}</span>
           <small>{areaTitle} · {task.estimatedMinutes} MIN · {dueLabel.toUpperCase()}{task.reminderTime ? " · REMINDER " + task.reminderTime : ""}</small>
         </span>
       </button>
