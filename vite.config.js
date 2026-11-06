@@ -5,6 +5,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: '0.0.0.0',
+    watch: {
+      usePolling: true,
+      interval: 1000,
+    },
     proxy: {
       '/api': {
         target: process.env.VITE_API_PROXY_TARGET || 'http://localhost:4000',
